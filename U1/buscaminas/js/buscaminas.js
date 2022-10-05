@@ -3,9 +3,13 @@ let rowSize = prompt("¿Cuántas filas tiene que tener la tabla?");
 let mineCount = prompt("¿Cuántas minas hay que insertar?");
 
 let arrayTablero = [];
-let contadorMinas=0;
+let contadorMinas = 0;
 let posFila;
 let posColumna;
+
+let fila = 0;
+let columna = 0;
+let minasAlrededor = 0;
 
 document.write('<table>');
 
@@ -18,24 +22,45 @@ for (let i = 0; i < columnSize; i++) {
 };
 //Creamos array bidimensional para la inserción de minas
 
-for(let fila=0;fila<rowSize;fila++){
-    arrayTablero[fila]=[];
+for (let fila = 0; fila < rowSize; fila++) {
+    arrayTablero[fila] = [];
 
-    for(let columna=0;columna<columnSize;columna++){
-        arrayTablero[fila][columna]=" ";
+    for (let columna = 0; columna < columnSize; columna++) {
+        arrayTablero[fila][columna] = " ";
     }
 }
 
-while(contadorMinas<mineCount) {
+while (contadorMinas < mineCount) {
     posFila = Math.floor(Math.random() * rowSize);
     posColumna = Math.floor(Math.random() * columnSize);
-    if (arrayTablero[posFila][posColumna] != "MINA"){
+    if (arrayTablero[posFila][posColumna] != "MINA") {
         arrayTablero[posFila][posColumna] = "MINA";
         contadorMinas++;
     }
 };
 
+for (let fila = 0; fila < rowSize; fila++) {
+    for (let columna = 0; columna < columnSize; columna++) {
+        if (arrayTablero[fila][columna] != "MINA") {
+
+            for (let cFila = fila - 1; cFila <= fila + 1; cFila++) {
+                for (let cColumna = columna - 1; cColumna < columna + 1; cColumna++) {
+                    if (cFila >= 0 || cColumna >= 0 || cFila < rowSize || cColumna < columnSize) {
+                        if (arrayTablero[cFila][cColumna] = "MINA") {
+                            minasAlrededor++;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+
+
+arrayTablero[fila][columna] = minasAlrededor;
+
 console.log(arrayTablero);
-console.log(contadorMinas);
 
 document.write('</table>');
