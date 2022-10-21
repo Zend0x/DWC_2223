@@ -3,6 +3,9 @@ let colCount=prompt("¿Cuántas columnas tendrá que tener el tablero?");
 
 let cellCounter=0;
 
+const images=["🇭🇰","🇹🇼","🇰🇬","🇲🇳","🇺🇿","🇪🇭","🇲🇴","🇫🇮","🇨🇾","🇳🇵"];
+const testArray=["1","2","3","4","5","6","7","8","9","10"];
+
 class Board{
     constructor(row,column){
         this.row=row;
@@ -19,8 +22,11 @@ class Board{
             this.boardArray[row]=[];
 
             for(let column=0;column<this.column;column++){
-                this.boardArray[row][column]=`image${cellCounter}`;
                 cellCounter++;
+                for(let j=0;j<2;j++){
+                    let test=Math.floor(Math.random()*images.length);
+                    this.boardArray[row][column]=images[test];
+                }
             }
         }
         return cellCounter;
