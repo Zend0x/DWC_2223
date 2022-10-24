@@ -20,13 +20,16 @@ class Board{
 
         for(let row=0;row<this.row;row++){
             this.boardArray[row]=[];
+            let test=Math.floor(Math.random()*images.length);
 
-            for(let column=0;column<this.column;column++){
+            for(let column=0;column<=this.column;column++){
                 cellCounter++;
                 for(let j=0;j<2;j++){
-                    let test=Math.floor(Math.random()*images.length);
-                    this.boardArray[row][column]=images[test];
+                    if(this.boardArray[row][column]=" "){
+                        this.boardArray[row][column]=images[test];
+                    }   
                 }
+                test=Math.floor(Math.random()*images.length);
             }
         }
         return cellCounter;
@@ -52,5 +55,7 @@ class Board{
 
 let board1=new Board(rowCount,colCount);
 console.log(cellCounter);
+console.log(board1.boardArray);
+board1.generateBoard();
 board1.printBoard();
 
