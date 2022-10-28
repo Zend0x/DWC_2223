@@ -30,8 +30,9 @@ class Board {
     fillBoard() {
         for(let i=0;i<rowCount;i++){
             for(let j=0;j<colCount;j++){
-                if(this.boardArray[i][j]==" "){
-                    this.boardArray[i][j]=images[4];
+                let test=Math.floor(Math.random()*images.length);
+                for(let x=0;x<2;x++){
+                    this.boardArray[i][j]=images[test];
                 }
             }
         }
