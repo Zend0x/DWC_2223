@@ -26,16 +26,30 @@ class Board {
 
         }
     }
+    fillBoard(){
+        let contentArray = Array();
+        let k = 0;
 
-    fillBoard() {
-        for(let i=0;i<rowCount;i++){
-            for(let j=0;j<colCount;j++){
-                let test=Math.floor(Math.random()*images.length);
-                for(let x=0;x<2;x++){
-                    this.boardArray[i][j]=images[test];
-                }
+        for(let i = 0; i < cellNumber; i = i+2){
+            contentArray[i] = images[k];
+            contentArray[i+1] = images[k];
+            k++;
+            if(k > 9){
+                k = 0;
             }
         }
+        let shuffledArray = contentArray.sort((a, b) => 0.5 - Math.random());
+
+        console.log(contentArray)
+
+        k = 0;
+        for(let i = 0; i < rowCount; i++){
+            for(let j=0;j<colCount;j++){
+                this.boardArray[i][j] = shuffledArray[k];
+                k++;
+            }
+        }
+        console.log(this.boardArray);
     }
 
     printBoard() {
