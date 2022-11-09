@@ -1,5 +1,4 @@
-document.addEventListener("DOMContentLoaded", function (event) {
-    class Tablero {
+class Tablero {
         constructor(filas, columnas) {
             this.filas = filas;
             this.columnas = columnas;
@@ -119,10 +118,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     }
 
 
-
+window.onload=function(){
     let buscaminas1 = new Buscaminas(5, 5, 5);
-
     console.log(buscaminas1.arrayTablero);
-
     buscaminas1.dibujarTableroDOM();
-});
+}
