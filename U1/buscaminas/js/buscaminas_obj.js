@@ -35,6 +35,14 @@ class Tablero {
             document.write('</table>');
         }
 
+        marcarCelda(){
+            alert("Has marcado la celda.");
+        }
+
+        despejarCelda(){
+            alert("Has despejado la celda.");
+        }
+
         dibujarTableroDOM() {
             let table = document.createElement('table');
             document.body.appendChild(table);
@@ -45,6 +53,13 @@ class Tablero {
 
                 for (let j = 0; j < this.columnas; j++) {
                     let td = document.createElement('td');
+                    td.setAttribute("id",`f${i}_c${j}`);
+                    td.dataset.fila=i;
+                    td.dataset.columna=j;
+
+                    td.addEventListener('click', this.marcarCelda, false);
+                    td.addEventListener('contextmenu',this.despejarCelda,false);
+
                     tr.appendChild(td);
                     //document.write(`<td>${this.arrayTablero[i][j]}</td>`);
                 }
