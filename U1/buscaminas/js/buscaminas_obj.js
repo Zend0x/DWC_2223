@@ -48,7 +48,7 @@ class Tablero {
                     td.setAttribute("id",`f${i}_c${j}`);
                     td.dataset.fila=i;
                     td.dataset.columna=j;
-                    td.setAttribute("style","background-color:white;")
+                    td.setAttribute("class","vacio");
 
                     td.addEventListener('click', this.despejarCelda);
                     td.addEventListener('contextmenu',this.marcarCelda);
@@ -61,24 +61,22 @@ class Tablero {
 
 
         marcarCelda(){
-            let columna=this.dataset.columna;
-            let fila=this.dataset.fila;
-
-            alert(`Despejar celda (${fila},${columna})`);
+            document.oncontextmenu=function(){return false};
+            switch (this.getAttribute("class")) {
+                case "vacio":
+                    this.setAttribute("class","flagged");
+                    break;
+                case "flagged":
+                    this.setAttribute("class","dudoso");
+                    break;
+                default:
+                    this.setAttribute("class","vacio");
+                    break;
+            }
         }
 
         despejarCelda(){
-            switch (this.getAttribute("style")) {
-                case "background-color:white;":
-                    this.setAttribute("style","background-color:red;")
-                    break;
-                case "background-color:red;":
-                    this.setAttribute("style","background-color:yellow;")
-                    break;
-                default:
-                    this.setAttribute("style","background-color:white;")
-                    break;
-            }
+            alert(`Despejada la celda ${this.dataset.fila},${this.dataset.columna}`)
         }
 
         modificarFilas(nuevasFilas) {

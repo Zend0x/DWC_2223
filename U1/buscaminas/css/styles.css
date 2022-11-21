@@ -17,3 +17,18 @@ td{
     height: 50px;
     padding: 10px;
 }
+.flagged{
+    background-image: url(../img/flag-fill.svg);
+    background-repeat: no-repeat;
+    background-size: 80%;
+    background-position: center;
+}
+.dudoso{
+    background-image: url(../img/question-lg.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.vacio{
+    background-color: white;
+}
