@@ -35,14 +35,6 @@ class Tablero {
             document.write('</table>');
         }
 
-        marcarCelda(){
-            alert("Has marcado la celda.");
-        }
-
-        despejarCelda(){
-            alert("Has despejado la celda.");
-        }
-
         dibujarTableroDOM() {
             let table = document.createElement('table');
             document.body.appendChild(table);
@@ -56,13 +48,36 @@ class Tablero {
                     td.setAttribute("id",`f${i}_c${j}`);
                     td.dataset.fila=i;
                     td.dataset.columna=j;
+                    td.setAttribute("style","background-color:white;")
 
-                    td.addEventListener('click', this.marcarCelda, false);
-                    td.addEventListener('contextmenu',this.despejarCelda,false);
+                    td.addEventListener('click', this.despejarCelda);
+                    td.addEventListener('contextmenu',this.marcarCelda);
 
                     tr.appendChild(td);
                     //document.write(`<td>${this.arrayTablero[i][j]}</td>`);
                 }
+            }
+        }
+
+
+        marcarCelda(){
+            let columna=this.dataset.columna;
+            let fila=this.dataset.fila;
+
+            alert(`Despejar celda (${fila},${columna})`);
+        }
+
+        despejarCelda(){
+            switch (this.getAttribute("style")) {
+                case "background-color:white;":
+                    this.setAttribute("style","background-color:red;")
+                    break;
+                case "background-color:red;":
+                    this.setAttribute("style","background-color:yellow;")
+                    break;
+                default:
+                    this.setAttribute("style","background-color:white;")
+                    break;
             }
         }
 
