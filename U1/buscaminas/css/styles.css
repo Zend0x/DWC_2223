@@ -36,3 +36,10 @@ td{
     text-align: center;
     font-size: xx-large;
 }
+
+.mina{
+    background-image: url(../img/mina.png);
+    background-color: red;
+    background-repeat: no-repeat;
+    background-position: center;
+}
