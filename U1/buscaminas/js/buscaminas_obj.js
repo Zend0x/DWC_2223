@@ -35,6 +35,27 @@ class Tablero {
             document.write('</table>');
         }
 
+        dibujarTableroDOM() {
+            let table = document.createElement('table');
+            document.body.appendChild(table);
+
+            for (let i = 0; i < this.filas; i++) {
+                let tr = document.createElement('tr');
+                table.appendChild(tr);
+
+                for (let j = 0; j < this.columnas; j++) {
+                    let td = document.createElement('td');
+                    td.setAttribute("id",`f${i}_c${j}`);
+                    td.dataset.fila=i;
+                    td.dataset.columna=j;
+                    td.setAttribute("class"," ");
+
+                    tr.appendChild(td);
+                    //document.write(`<td>${this.arrayTablero[i][j]}</td>`);
+                }
+            }
+        }
+
         modificarFilas(nuevasFilas) {
             // Modificar el número de filas y volver a crear el tablero con las filas nuevas
             this.filas = nuevasFilas;
@@ -48,10 +69,12 @@ class Tablero {
 
             this.crearTablero();
         }
+        
 
 
     }
 
+    //Inicio de la clase Buscaminas
     class Buscaminas extends Tablero {
         constructor(filas, columnas, numMinas) {
             super(filas, columnas);
@@ -94,41 +117,34 @@ class Tablero {
                             }
                         }
                         this.arrayTablero[fila][columna] = minasAlrededor;
-
-                        return this.arrayTablero;
                     }
                 }
             }
-        }
+        }  
+    }
 
-        dibujarTableroDOM() {
-            let table = document.createElement('table');
-            document.body.appendChild(table);
 
-            for (let i = 0; i < this.filas; i++) {
-                let tr = document.createElement('tr');
-                table.appendChild(tr);
 
-                for (let j = 0; j < this.columnas; j++) {
-                    let td = document.createElement('td');
-                    td.setAttribute("id",`f${i}_c${j}`);
-                    td.dataset.fila=i;
-                    td.dataset.columna=j;
-                    td.setAttribute("class"," ");
 
-                    td.addEventListener('click', this.despejarCelda);
-                    td.addEventListener('contextmenu',this.marcarCelda);
+document.addEventListener("DOMContentLoaded",function(event){
+    function anadirListeners(){
+        let celda;
 
-                    tr.appendChild(td);
-                    //document.write(`<td>${this.arrayTablero[i][j]}</td>`);
-                }
+        for(let i=0;i<this.filas;i++){
+            for(let j=0;j<this.columnas;j++){
+                celda=document.getElementById(`f${i}_c${j}`);
+
+                celda.addEventListener('click',this.despejarCelda);
+                celda.addEventListener('contextmenu',this.marcarCelda);
             }
         }
+    }
 
-        marcarCelda(){
-            //Para que al dar click derecho no salga el menú de opciones
-            document.oncontextmenu=function(){return false};
-            //Usando un switch
+
+    function marcarCelda(){
+        //Para que al dar click derecho no salga el menú de opciones
+        document.oncontextmenu=function(){return false};
+        //Usando un switch
             if(this.getAttribute("class")!="despejado"){
                 switch (this.getAttribute("class")) {
                     case " ":
@@ -143,21 +159,18 @@ class Tablero {
                 }
             
             }
+             
         }
 
-        despejarCelda(){
+        function despejarCelda(){
             this.setAttribute("class","despejado");
             let fila=this.dataset.fila;
-            let columna=this.dataset.columna;
-
-            let contenidoCelda=this.arrayTablero[fila][columna];
-            this.innerHTML=contenidoCelda;
+            let columna=this.dataset.columna; 
         }
-    }
-
+})
 
 window.onload=function(){
     let buscaminas1 = new Buscaminas(5, 5, 5);
     console.log(buscaminas1.arrayTablero);
     buscaminas1.dibujarTableroDOM();
-}
+}  
