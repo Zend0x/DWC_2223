@@ -172,10 +172,16 @@ class Buscaminas extends Tablero {
         let fila = celda.dataset.fila;
         let columna = celda.dataset.columna;
 
-        if(this.arrayTablero[fila][columna]=="MINA"){
-            celda.setAttribute("class","mina");
-        }else if(this.arrayTablero[fila][columna]!=0){
-            celda.innerHTML=this.arrayTablero[fila][columna];
+        let contenidoCelda=this.arrayTablero[fila][columna];
+        let esNumero=(contenidoCelda!="MINA"&&contenidoCelda!=0);
+        let esMina=(contenidoCelda=="MINA");
+        let esCero=(contenidoCelda==0);
+
+        let arrayFilas;
+        let arrayColumnas;
+
+        if(esNumero){
+            celda.innerHTML=contenidoCelda;
             switch (celda.innerHTML){
                 case "1":
                     celda.setAttribute("style","color:rgb(0, 57, 214);");
@@ -201,10 +207,34 @@ class Buscaminas extends Tablero {
                 case "8":
                     celda.setAttribute("style","color:gray");
                     break;
-                
             }
-        }else if(this.arrayTablero[fila][columna]==0){
+        }else if(esCero){
             celda.innerHTML="";
+            let fila=celda.dataset.fila;
+            let columna=celda.dataset.fila;
+            let siguienteFila=fila+1;
+            if(this.arrayTablero[siguienteFila][columna]==""){
+                this.despejarCelda;
+            }
+        } else if(esMina){
+            arrayFilas=celda.parentNode.parentNode.childNodes;
+            for(let tr of arrayFilas){
+                arrayColumnas=tr.childNodes;
+                for(let td of arrayColumnas){
+                    let filaBomba=td.dataset.fila;
+                    let columnaBomba=td.dataset.columna;
+                    let valorCeldaBomba=this.arrayTablero[filaBomba][columnaBomba];
+
+                    if(td.lastChild!=""){
+                        let bombaMalSeleccionada=(celda.getAttribute("class")=='flagged'&&contenidoCelda!='MINA');
+                        if(bombaMalSeleccionada){
+                            td.setAttribute("class","error");
+                        }else if(valorCeldaBomba=="MINA"){
+                            td.setAttribute("class","mina");
+                        }
+                    }
+                }
+            }
         }
     }
 }

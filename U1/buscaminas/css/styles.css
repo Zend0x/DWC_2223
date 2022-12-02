@@ -37,6 +37,10 @@ td{
     font-size: xx-large;
 }
 
+.error{
+    background-color: red;
+}
+
 .mina{
     background-image: url(../img/mina.png);
     background-color: red;
