@@ -144,15 +144,13 @@ class Buscaminas extends Tablero {
         //Para que al dar click derecho no salga el menú de opciones
         document.oncontextmenu = function () { return false };
         //Usando un switch
-        if (celda.getAttribute("class") != "despejado") {
+        if (celda.getAttribute("class") != "despejado" && celda.getAttribute("class")!='mina') {
             switch (celda.getAttribute("class")) {
                 case " ":
                     celda.setAttribute("class", "flagged");
                     break;
                 case "flagged":
                     celda.setAttribute("class", "dudoso");
-                    break;
-                case "mina":
                     break;
                 default:
                     celda.setAttribute("class", " ");
@@ -210,12 +208,19 @@ class Buscaminas extends Tablero {
             }
         }else if(esCero){
             celda.innerHTML="";
-            let fila=celda.dataset.fila;
-            let columna=celda.dataset.fila;
-            let siguienteFila=fila+1;
-            if(this.arrayTablero[siguienteFila][columna]==""){
-                this.despejarCelda;
+            let fila=parseInt(celda.dataset.fila);
+            let columna=parseInt(celda.dataset.columna);
+
+            for(let cFila=fila-1;cFila<=fila+1;cFila++){
+                if(cFila>=0&&cFila<this.filas){
+                    for(let cCol=columna-1;cCol<=columna;cCol++){
+                        if(cCol>=0&&cCol<this.columna){
+                            
+                        }
+                    }
+                }
             }
+
         } else if(esMina){
             arrayFilas=celda.parentNode.parentNode.childNodes;
             for(let tr of arrayFilas){
