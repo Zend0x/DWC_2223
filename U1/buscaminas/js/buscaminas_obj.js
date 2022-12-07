@@ -131,7 +131,7 @@ class Buscaminas extends Tablero {
             for (let j = 0; j < this.columnas; j++) {
                 celda = document.getElementById(`f${i}_c${j}`);
 
-                celda.addEventListener('click', this.despejarCelda.bind(this));
+                celda.addEventListener('click', this.despejarCeldaEvento.bind(this));
                 celda.addEventListener('contextmenu', this.marcarCelda.bind(this));
             }
         }
@@ -161,12 +161,7 @@ class Buscaminas extends Tablero {
 
     }
 
-    despejarCelda(elEvento) {
-        let evento = elEvento || window.event;
-        let celda = evento.currentTarget;
-
-        celda.setAttribute("class", "despejado");
-
+    despejarCelda(celda){
         let fila = celda.dataset.fila;
         let columna = celda.dataset.columna;
 
@@ -174,11 +169,18 @@ class Buscaminas extends Tablero {
         let esNumero=(contenidoCelda!="MINA"&&contenidoCelda!=0);
         let esMina=(contenidoCelda=="MINA");
         let esCero=(contenidoCelda==0);
+        let estaMarcado=(celda.getAttribute("class")=="flagged");
 
         let arrayFilas;
         let arrayColumnas;
 
-        if(esNumero){
+        celda.setAttribute("class", "despejado");
+
+        if(estaMarcado){
+            celda.setAttribute("class","flagged");
+            console.log("adawqewq")
+        }
+        else if(esNumero){
             celda.innerHTML=contenidoCelda;
             switch (celda.innerHTML){
                 case "1":
@@ -214,8 +216,9 @@ class Buscaminas extends Tablero {
             for(let cFila=fila-1;cFila<=fila+1;cFila++){
                 if(cFila>=0&&cFila<this.filas){
                     for(let cCol=columna-1;cCol<=columna;cCol++){
-                        if(cCol>=0&&cCol<this.columna){
-                            
+                        if(cCol>=0&&cCol<this.columnas){
+                            let celdaActual=0;
+                            this.despejarCelda();
                         }
                     }
                 }
@@ -240,7 +243,15 @@ class Buscaminas extends Tablero {
                     }
                 }
             }
+            setTimeout(function(){alert("Has perdido.")},500);
         }
+    }
+
+    despejarCeldaEvento(elEvento) {
+        let evento = elEvento || window.event;
+        let celda = evento.currentTarget;
+
+        this.despejarCelda(celda);
     }
 }
 
