@@ -165,6 +165,8 @@ class Buscaminas extends Tablero {
         let fila = celda.dataset.fila;
         let columna = celda.dataset.columna;
 
+        celda.dataset.despejado=true;
+
         let contenidoCelda=this.arrayTablero[fila][columna];
         let esNumero=(contenidoCelda!="MINA"&&contenidoCelda!=0);
         let esMina=(contenidoCelda=="MINA");
@@ -213,12 +215,19 @@ class Buscaminas extends Tablero {
             let fila=parseInt(celda.dataset.fila);
             let columna=parseInt(celda.dataset.columna);
 
+            let estaDestapada=(celda.dataset.despejado=="true");
             for(let cFila=fila-1;cFila<=fila+1;cFila++){
                 if(cFila>=0&&cFila<this.filas){
                     for(let cCol=columna-1;cCol<=columna;cCol++){
                         if(cCol>=0&&cCol<this.columnas){
-                            let celdaActual=0;
-                            this.despejarCelda();
+                            let celdaActual=document.getElementById(`f${cFila}_c${cCol}`);
+                            let contenidoCelda=this.arrayTablero[cFila][cCol];
+
+                            let estaDestapada=(celdaActual.dataset.despejado=="true");
+
+                            if(!estaDestapada){
+                                this.despejarCelda(celdaActual);
+                            }
                         }
                     }
                 }
