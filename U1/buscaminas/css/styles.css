@@ -1,0 +1,49 @@
+h2{
+    text-align: center;
+}
+table{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+tr, td, .vacio{
+    background-color: #BBBBBB;
+    border-left: 2px solid #D3D3D3;
+    border-top: 2px solid #D3D3D3;
+    border-right: 2px solid #A9A9A9;
+    border-bottom: 2px solid #A9A9A9;
+  }
+td{
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+}
+.flagged{
+    background-image: url(../img/flag-fill.svg);
+    background-repeat: no-repeat;
+    background-size: 80%;
+    background-position: center;
+}
+.dudoso{
+    background-image: url(../img/question-lg.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.despejado{
+    background-color:#9b9b9b;
+    text-align: center;
+    font-size: xx-large;
+}
+
+.error{
+    background-color: red;
+}
+
+.mina{
+    background-image: url(../img/mina.png);
+    background-color: red;
+    background-repeat: no-repeat;
+    background-position: center;
+}
