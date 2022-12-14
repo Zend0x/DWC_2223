@@ -139,93 +139,93 @@ class Buscaminas extends Tablero {
 
 
     marcarCelda(elEvento) {
-        let evento=elEvento||window.event;
-        let celda=evento.currentTarget;
+        let evento = elEvento || window.event;
+        let celda = evento.currentTarget;
         //Para que al dar click derecho no salga el menú de opciones
         document.oncontextmenu = function () { return false };
         //Usando un switch
-        if (celda.getAttribute("class") != "despejado" && celda.getAttribute("class")!='mina') {
+
+        let banderasPuestas = 0;
+        if (celda.getAttribute("class") != "despejado" && celda.getAttribute("class") != 'mina' && banderasPuestas <= this.numMinas) {
             switch (celda.getAttribute("class")) {
                 case " ":
                     celda.setAttribute("class", "flagged");
+                    banderasPuestas++;
                     break;
                 case "flagged":
                     celda.setAttribute("class", "dudoso");
+                    banderasPuestas--;
                     break;
                 default:
                     celda.setAttribute("class", " ");
                     break;
             }
-
         }
-
     }
 
-    despejarCelda(celda){
+    despejarCelda(celda) {
         let fila = celda.dataset.fila;
         let columna = celda.dataset.columna;
 
-        celda.dataset.despejado=true;
+        celda.dataset.despejado = true;
 
-        let contenidoCelda=this.arrayTablero[fila][columna];
-        let esNumero=(contenidoCelda!="MINA"&&contenidoCelda!=0);
-        let esMina=(contenidoCelda=="MINA");
-        let esCero=(contenidoCelda==0);
-        let estaMarcado=(celda.getAttribute("class")=="flagged");
+        let contenidoCelda = this.arrayTablero[fila][columna];
+        let esNumero = (contenidoCelda != "MINA" && contenidoCelda != 0);
+        let esMina = (contenidoCelda == "MINA");
+        let esCero = (contenidoCelda == 0);
+        let estaMarcado = (celda.getAttribute("class") == "flagged");
 
         let arrayFilas;
         let arrayColumnas;
 
         celda.setAttribute("class", "despejado");
 
-        if(estaMarcado){
-            celda.setAttribute("class","flagged");
+        if (estaMarcado) {
+            celda.setAttribute("class", "flagged");
             console.log("adawqewq")
         }
-        else if(esNumero){
-            celda.innerHTML=contenidoCelda;
-            switch (celda.innerHTML){
+        else if (esNumero) {
+            celda.innerHTML = contenidoCelda;
+            switch (celda.innerHTML) {
                 case "1":
-                    celda.setAttribute("style","color:rgb(0, 57, 214);");
+                    celda.setAttribute("style", "color:rgb(0, 57, 214);");
                     break;
                 case "2":
-                    celda.setAttribute("style","color:green;");
+                    celda.setAttribute("style", "color:green;");
                     break;
                 case "3":
-                    celda.setAttribute("style","color:red;");
+                    celda.setAttribute("style", "color:red;");
                     break;
                 case "4":
-                    celda.setAttribute("style","color:navy;");
+                    celda.setAttribute("style", "color:navy;");
                     break;
                 case "5":
-                    celda.setAttribute("style","color:darkred")
+                    celda.setAttribute("style", "color:darkred")
                     break;
                 case "6":
-                    celda.setAttribute("style","color:aqua")
+                    celda.setAttribute("style", "color:aqua")
                     break;
                 case "7":
-                    celda.setAttribute("style","color:black")
+                    celda.setAttribute("style", "color:black")
                     break;
                 case "8":
-                    celda.setAttribute("style","color:gray");
+                    celda.setAttribute("style", "color:gray");
                     break;
             }
-        }else if(esCero){
-            celda.innerHTML="";
-            let fila=parseInt(celda.dataset.fila);
-            let columna=parseInt(celda.dataset.columna);
+        } else if (esCero) {
+            celda.innerHTML = "";
+            let fila = parseInt(celda.dataset.fila);
+            let columna = parseInt(celda.dataset.columna);
 
-            let estaDestapada=(celda.dataset.despejado=="true");
-            for(let cFila=fila-1;cFila<=fila+1;cFila++){
-                if(cFila>=0&&cFila<this.filas){
-                    for(let cCol=columna-1;cCol<=columna;cCol++){
-                        if(cCol>=0&&cCol<this.columnas){
-                            let celdaActual=document.getElementById(`f${cFila}_c${cCol}`);
-                            let contenidoCelda=this.arrayTablero[cFila][cCol];
+            let estaDestapada = (celda.dataset.despejado == "true");
+            for (let cFila = fila - 1; cFila <= fila + 1; cFila++) {
+                if (cFila >= 0 && cFila < this.filas) {
+                    for (let cCol = columna - 1; cCol <= columna + 1; cCol++) {
+                        if (cCol >= 0 && cCol < this.columnas) {
+                            let celdaActual = document.getElementById(`f${cFila}_c${cCol}`);
+                            let estaDestapada = (celdaActual.dataset.despejado == "true");
 
-                            let estaDestapada=(celdaActual.dataset.despejado=="true");
-
-                            if(!estaDestapada){
+                            if (!estaDestapada) {
                                 this.despejarCelda(celdaActual);
                             }
                         }
@@ -233,26 +233,32 @@ class Buscaminas extends Tablero {
                 }
             }
 
-        } else if(esMina){
-            arrayFilas=celda.parentNode.parentNode.childNodes;
-            for(let tr of arrayFilas){
-                arrayColumnas=tr.childNodes;
-                for(let td of arrayColumnas){
-                    let filaBomba=td.dataset.fila;
-                    let columnaBomba=td.dataset.columna;
-                    let valorCeldaBomba=this.arrayTablero[filaBomba][columnaBomba];
+        } else if (esMina) {
+            arrayFilas = celda.parentNode.parentNode.childNodes;
+            for (let tr of arrayFilas) {
+                arrayColumnas = tr.childNodes;
+                for (let td of arrayColumnas) {
+                    let filaBomba = td.dataset.fila;
+                    let columnaBomba = td.dataset.columna;
+                    let valorCeldaBomba = this.arrayTablero[filaBomba][columnaBomba];
 
-                    if(td.lastChild!=""){
-                        let bombaMalSeleccionada=(celda.getAttribute("class")=='flagged'&&contenidoCelda!='MINA');
-                        if(bombaMalSeleccionada){
-                            td.setAttribute("class","error");
-                        }else if(valorCeldaBomba=="MINA"){
-                            td.setAttribute("class","mina");
+                    if (td.lastChild != "") {
+                        let bombaMalSeleccionada = (celda.getAttribute("class") == 'flagged' && contenidoCelda != 'MINA');
+                        if (bombaMalSeleccionada) {
+                            td.setAttribute("class", "error");
+                        } else if (valorCeldaBomba == "MINA") {
+                            td.setAttribute("class", "mina");
                         }
                     }
                 }
             }
-            setTimeout(function(){alert("Has perdido.")},500);
+            setTimeout(function () { alert("Has perdido.") }, 500);
+        }
+    }
+
+    ganar() {
+        if (true) {
+
         }
     }
 
