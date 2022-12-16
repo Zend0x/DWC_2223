@@ -38,10 +38,21 @@ td{
 }
 
 .error{
-    background-color: red;
+    background-image: url(../img/flag-fill.svg);
+    background-repeat: no-repeat;
+    background-size: 80%;
+    background-position: center;
+    background-color: rgb(165, 1, 1);
 }
 
 .mina{
+    background-image: url(../img/mina.png);
+    background-color: gray;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.minaRoja{
     background-image: url(../img/mina.png);
     background-color: red;
     background-repeat: no-repeat;

@@ -38,6 +38,10 @@ class Tablero {
     dibujarTableroDOM() {
         let table = document.createElement('table');
         document.body.appendChild(table);
+        let caption=document.createElement('caption');
+        caption.setAttribute("id","contadorBanderas");
+        table.appendChild(caption);
+        caption.innerHTML="Quedan "+this.banderasDisponibles+" banderas.";
 
         for (let i = 0; i < this.filas; i++) {
             let tr = document.createElement('tr');
@@ -79,6 +83,10 @@ class Buscaminas extends Tablero {
     constructor(filas, columnas, numMinas) {
         super(filas, columnas);
         this.numMinas = numMinas;
+
+        this.banderasDisponibles=this.numMinas;
+        this.banderasBienPuestas=0;
+        this.celdasBienDespejadas=0;
 
         this.colocarMinas();
         this.colocarNumeros();
@@ -142,23 +150,32 @@ class Buscaminas extends Tablero {
         let celda = evento.currentTarget;
         let fila=celda.dataset.fila;
         let columna=celda.dataset.fila;
-
-        
         
         //Para que al dar click derecho no salga el menú de opciones
         document.oncontextmenu = function () { return false };
         //Usando un switch
 
-        let banderasPuestas = 0;
-        if (celda.getAttribute("class") != "despejado" && celda.getAttribute("class") != 'mina' && banderasPuestas <= this.numMinas) {
+        if (celda.getAttribute("class") != "despejado" && celda.getAttribute("class") != 'mina') {
             switch (celda.getAttribute("class")) {
                 case " ":
-                    celda.setAttribute("class", "flagged");
-                    banderasPuestas++;
+                    if(this.banderasDisponibles>0){
+                        celda.setAttribute("class", "flagged");
+                        this.banderasDisponibles--;
+                        let contadorBanderasTexto=document.getElementById("contadorBanderas");
+                        contadorBanderasTexto.innerHTML="Quedan "+this.banderasDisponibles+" banderas.";
+                        let filaBandera=celda.dataset.fila;
+                        let columnaBandera=celda.dataset.columna;
+                        if(this.arrayTablero[filaBandera][columnaBandera]=="MINA"){
+                            this.banderasBienPuestas++;
+                            this.ganar();
+                        }
+                    }
                     break;
                 case "flagged":
                     celda.setAttribute("class", "dudoso");
-                    banderasPuestas--;
+                    this.banderasDisponibles++;
+                    let contadorBanderasTexto=document.getElementById("contadorBanderas");
+                    contadorBanderasTexto.innerHTML="Quedan "+this.banderasDisponibles+" banderas.";
                     break;
                 default:
                     celda.setAttribute("class", " ");
@@ -186,7 +203,6 @@ class Buscaminas extends Tablero {
 
         if (estaMarcado) {
             celda.setAttribute("class", "flagged");
-            console.log("adawqewq")
         }
         else if (esNumero) {
             celda.innerHTML = contenidoCelda;
@@ -216,27 +232,32 @@ class Buscaminas extends Tablero {
                     celda.setAttribute("style", "color:gray");
                     break;
             }
+            this.celdasBienDespejadas++;
+            this.ganar();
         } else if (esCero) {
-            celda.innerHTML = "";
-            let fila = parseInt(celda.dataset.fila);
-            let columna = parseInt(celda.dataset.columna);
+            if(celda.getAttribute("class")!="flagged"){
+                celda.innerHTML = "";
+                let fila = parseInt(celda.dataset.fila);
+                let columna = parseInt(celda.dataset.columna);
 
-            let estaDestapada = (celda.dataset.despejado == "true");
-            for (let cFila = fila - 1; cFila <= fila + 1; cFila++) {
-                if (cFila >= 0 && cFila < this.filas) {
-                    for (let cCol = columna - 1; cCol <= columna + 1; cCol++) {
-                        if (cCol >= 0 && cCol < this.columnas) {
-                            let celdaActual = document.getElementById(`f${cFila}_c${cCol}`);
-                            let estaDestapada = (celdaActual.dataset.despejado == "true");
+                let estaDestapada = (celda.dataset.despejado == "true");
+                for (let cFila = fila - 1; cFila <= fila + 1; cFila++) {
+                    if (cFila >= 0 && cFila < this.filas) {
+                        for (let cCol = columna - 1; cCol <= columna + 1; cCol++) {
+                            if (cCol >= 0 && cCol < this.columnas) {
+                                let celdaActual = document.getElementById(`f${cFila}_c${cCol}`);
+                                let estaDestapada = (celdaActual.dataset.despejado == "true");
 
-                            if (!estaDestapada) {
-                                this.despejarCelda(celdaActual);
+                                if (!estaDestapada) {
+                                    this.despejarCelda(celdaActual);
+                                }
                             }
                         }
                     }
                 }
             }
-
+            this.celdasBienDespejadas++;
+            this.ganar();
         } else if (esMina) {
             arrayFilas = celda.parentNode.parentNode.childNodes;
             for (let tr of arrayFilas) {
@@ -247,11 +268,12 @@ class Buscaminas extends Tablero {
                     let valorCeldaBomba = this.arrayTablero[filaBomba][columnaBomba];
 
                     if (td.lastChild != "") {
-                        let bombaMalSeleccionada = (celda.getAttribute("class") == 'flagged' && contenidoCelda != 'MINA');
-                        if (bombaMalSeleccionada) {
-                            td.setAttribute("class", "error");
-                        } else if (valorCeldaBomba == "MINA") {
-                            td.setAttribute("class", "mina");
+                        let banderaMalPuesta = (celda.getAttribute("class") == 'flagged' && contenidoCelda != 'MINA');
+
+                        if(valorCeldaBomba=="MINA"){
+                            td.setAttribute("class","minaRoja")
+                        }else if(valorCeldaBomba!="MINA"&&td.getAttribute("class")=="flagged"){
+                            td.setAttribute("class","error");
                         }
                     }
                 }
@@ -261,8 +283,11 @@ class Buscaminas extends Tablero {
     }
 
     ganar() {
-        if (true) {
+        let banderasBuenas=(this.banderasBienPuestas==this.numMinas);
+        let celdasDespejadas=(this.celdasBienDespejadas==(this.filas*this.columnas)-this.numMinas);
 
+        if(banderasBuenas||celdasDespejadas){
+            setTimeout(function () { alert("¡Has ganado!") }, 500);
         }
     }
 
