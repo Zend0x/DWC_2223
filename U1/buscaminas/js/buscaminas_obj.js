@@ -137,10 +137,14 @@ class Buscaminas extends Tablero {
         }
     }
 
-
     marcarCelda(elEvento) {
         let evento = elEvento || window.event;
         let celda = evento.currentTarget;
+        let fila=celda.dataset.fila;
+        let columna=celda.dataset.fila;
+
+        
+        
         //Para que al dar click derecho no salga el menú de opciones
         document.oncontextmenu = function () { return false };
         //Usando un switch
