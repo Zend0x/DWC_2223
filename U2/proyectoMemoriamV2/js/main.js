@@ -54,11 +54,17 @@ class Board {
     printBoard() {
         //Comprueba que el número sea divisible entre 2 (es decir, par).
         if ((rowCount * colCount) % 2 == 0) {
-            document.write("<table>");
+            let table=document.createElement('table');
+            document.body.appendChild(table);
             for (let i = 0; i < this.row; i++) {
-                document.write("<tr>");
+                let tr=document.createElement('tr');
+                table.appendChild(tr);
                 for (let j = 0; j < this.column; j++) {
-                    document.write(`<td>${this.boardArray[i][j]}</td>`);
+                    let td=document.createElement('td');
+                    td.dataset.row=i;
+                    td.dataset.column=j;
+
+                    tr.appendChild(td);
                 }
                 document.write("</tr>");
             };
@@ -70,8 +76,8 @@ class Board {
 
     }
 }
-
-let board1 = new Board(rowCount, colCount);
-board1.fillBoard();
-board1.printBoard();
-
+window.onload=()=>{
+    let board1 = new Board(rowCount, colCount);
+    board1.fillBoard();
+    board1.printBoard();
+}
