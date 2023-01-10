@@ -1,7 +1,5 @@
-let rowCount = prompt("¿Cuántas filas tendrá que tener el tablero?");
-let colCount = prompt("¿Cuántas columnas tendrá que tener el tablero?");
-let cellNumber = rowCount * colCount;
-let pairNumber = cellNumber / 2;
+//let rowCount = prompt("¿Cuántas filas tendrá que tener el tablero?");
+//let colCount = prompt("¿Cuántas columnas tendrá que tener el tablero?");
 
 const images = ["🇭🇰", "🇹🇼", "🇰🇬", "🇲🇳", "🇺🇿", "🇪🇭", "🇲🇴", "🇫🇮", "🇨🇾", "🇳🇵"];
 
@@ -9,6 +7,13 @@ class Board {
     constructor(row, column) {
         this.row = row;
         this.column = column;
+
+        this.uncoveredTiles=0;
+        this.pairsMatched=0;
+        this.tile1="";
+        this.tile2="";
+
+        this.cellNumber=row*column;
 
         this.generateBoard();
     }
@@ -30,7 +35,7 @@ class Board {
         let contentArray = Array();
         let k = 0;
         //Primero crea y rellena un array simple con el contenido de otro array.
-        for(let i = 0; i < cellNumber; i = i+2){
+        for(let i = 0; i < this.cellNumber; i = i+2){
             contentArray[i] = images[k];
             contentArray[i+1] = images[k];
             k++;
@@ -43,8 +48,8 @@ class Board {
 
         //Ahora pasa el contenido del array ya shuffleado al array final.
         k = 0;
-        for(let i = 0; i < rowCount; i++){
-            for(let j=0;j<colCount;j++){
+        for(let i = 0; i < this.row; i++){
+            for(let j=0;j<this.column;j++){
                 this.boardArray[i][j] = shuffledArray[k];
                 k++;
             }
@@ -53,7 +58,7 @@ class Board {
     //Imprime el array por pantalla en forma de tabla.
     printBoard() {
         //Comprueba que el número sea divisible entre 2 (es decir, par).
-        if ((rowCount * colCount) % 2 == 0) {
+        if ((this.row * this.column) % 2 == 0) {
             let table=document.createElement('table');
             document.body.appendChild(table);
             for (let i = 0; i < this.row; i++) {
@@ -63,10 +68,14 @@ class Board {
                     let td=document.createElement('td');
                     td.dataset.row=i;
                     td.dataset.column=j;
+                    td.id=`row${td.dataset.row}col${td.dataset.column}`;
+                    td.dataset.uncovered=0;
+                    td.setAttribute("class","covered");
+
+                    td.addEventListener('click', this.uncoverTile.bind(this));
 
                     tr.appendChild(td);
                 }
-                document.write("</tr>");
             };
         //En caso de que no, lanza una alerta por el navegador avisando de que 
         //los números no son correctos.
@@ -75,9 +84,46 @@ class Board {
         }
 
     }
+
+    uncoverTile(event){
+        let tileEvent=event||window.event;
+        let tile=tileEvent.currentTarget;
+        let tileRow=tile.dataset.row;
+        let tileCol=tile.dataset.column;
+
+
+        if(tile.dataset.uncovered==0){
+            this.uncoveredTiles++;
+            if(this.uncoveredTiles==1){
+                this.tile1=document.getElementById(`row${tileRow}col${tileCol}`);
+                tile.setAttribute("uncovered",1);
+                tile.setAttribute("class","uncovered");
+                tile.innerHTML=this.boardArray[tileRow][tileCol];
+            }else if(this.uncoveredTiles==2){
+                this.tile2=document.getElementById(`row${tileRow}col${tileCol}`);
+                if(this.tile2.id!=this.tile1.id){
+                    tile.setAttribute("uncovered",1);
+                    tile.setAttribute("class","uncovered");
+                    tile.innerHTML=this.boardArray[tileRow][tileCol];
+
+                    if(this.tile1.innerHTML==this.tile2.innerHTML){
+                        this.tile1.setAttribute("class","matched");
+                        this.tile2.setAttribute("class","matched");
+                    }
+                }else{
+                    this.tile1.setAttribute("class","covered");
+                    this.tile1.innerHTML="";
+                    this.tile2.setAttribute("class","covered");
+                    this.tile2.innerHTML="";
+                }
+                this.uncoveredTiles=0;
+            }
+        }
+    }
 }
 window.onload=()=>{
-    let board1 = new Board(rowCount, colCount);
+    let board1 = new Board(5, 4);
     board1.fillBoard();
     board1.printBoard();
+    console.log(board1.boardArray);
 }
