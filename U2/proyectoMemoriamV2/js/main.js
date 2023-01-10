@@ -99,11 +99,13 @@ class Board {
                 tile.setAttribute("uncovered",1);
                 tile.setAttribute("class","uncovered");
                 tile.innerHTML=this.boardArray[tileRow][tileCol];
+                console.log(this.tile1.id);
             }else if(this.uncoveredTiles==2){
                 this.tile2=document.getElementById(`row${tileRow}col${tileCol}`);
+                console.log(this.tile2.id);
                 if(this.tile2.id!=this.tile1.id){
-                    tile.setAttribute("uncovered",1);
-                    tile.setAttribute("class","uncovered");
+                    this.tile.setAttribute("uncovered",1);
+                    this.tile.setAttribute("class","uncovered");
                     tile.innerHTML=this.boardArray[tileRow][tileCol];
 
                     if(this.tile1.innerHTML==this.tile2.innerHTML){
