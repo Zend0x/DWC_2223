@@ -14,6 +14,7 @@ class Board {
         this.tile2="";
 
         this.cellNumber=row*column;
+        this.pairsToWin=this.cellNumber/2;
 
         this.generateBoard();
     }
@@ -61,6 +62,9 @@ class Board {
         if ((this.row * this.column) % 2 == 0) {
             let table=document.createElement('table');
             document.body.appendChild(table);
+            let pointsText=document.createElement('caption');
+            table.appendChild(pointsText);
+            pointsText.innerHTML="Puntos: 0";
             for (let i = 0; i < this.row; i++) {
                 let tr=document.createElement('tr');
                 table.appendChild(tr);
@@ -99,28 +103,50 @@ class Board {
                 tile.setAttribute("uncovered",1);
                 tile.setAttribute("class","uncovered");
                 tile.innerHTML=this.boardArray[tileRow][tileCol];
-                console.log(this.tile1.id);
             }else if(this.uncoveredTiles==2){
                 this.tile2=document.getElementById(`row${tileRow}col${tileCol}`);
-                console.log(this.tile2.id);
-                if(this.tile2.id!=this.tile1.id){
-                    this.tile.setAttribute("uncovered",1);
-                    this.tile.setAttribute("class","uncovered");
+                if(this.tile2.id==this.tile1.id){
+                    this.tile1.setAttribute("class","covered");
+                    this.tile1.innerHTML="";
+                }else{
+                    this.tile1.setAttribute("uncovered",1);
+                    this.tile1.setAttribute("class","uncovered");
+                    this.tile2.setAttribute("uncovered",1);
+                    this.tile2.setAttribute("class","uncovered");
                     tile.innerHTML=this.boardArray[tileRow][tileCol];
 
                     if(this.tile1.innerHTML==this.tile2.innerHTML){
                         this.tile1.setAttribute("class","matched");
                         this.tile2.setAttribute("class","matched");
+
+                        this.tile1.removeEventListener('click', this.uncoverTile);
+                        this.tile2.removeEventListener('click', this.uncoverTile);
+
+                        this.pairsMatched++;
+                        if(this.pairsMatched==this.pairsToWin){
+                            this.win();
+                        }
+                    }else if(this.tile1.innerHTML!=this.tile2.innerHTML){
+                        setTimeout(() => {
+                            this.tile1.setAttribute("class","covered");
+                            this.tile1.innerHTML="";
+                            this.tile2.setAttribute("class","covered");
+                            this.tile2.innerHTML="";
+                            if(tile.dataset.uncovered==0){
+                                tile.setAttribute("class","covered");
+                            }
+                        }, 200);
                     }
-                }else{
-                    this.tile1.setAttribute("class","covered");
-                    this.tile1.innerHTML="";
-                    this.tile2.setAttribute("class","covered");
-                    this.tile2.innerHTML="";
                 }
                 this.uncoveredTiles=0;
             }
         }
+    }
+
+    win(){
+        setTimeout(() => {
+            alert("¡Has ganado!");
+        }, 1000);
     }
 }
 window.onload=()=>{
