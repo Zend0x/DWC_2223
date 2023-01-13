@@ -12,9 +12,14 @@ class Board {
         this.pairsMatched=0;
         this.tile1="";
         this.tile2="";
+        this.recentFailTile1="";
+        this.recentFailTile2="";
 
         this.cellNumber=row*column;
         this.pairsToWin=this.cellNumber/2;
+        this.maxPoints=this.pairsToWin*10;
+        this.currentPoints=0;
+        this.gameTimer=0;
 
         this.generateBoard();
     }
@@ -63,8 +68,15 @@ class Board {
             let table=document.createElement('table');
             document.body.appendChild(table);
             let pointsText=document.createElement('caption');
+            pointsText.id="pointsText";
             table.appendChild(pointsText);
-            pointsText.innerHTML="Puntos: 0";
+            let resetButton=document.createElement('button');
+            resetButton.type="button";
+            resetButton.id="resetButton";
+            resetButton.onclick=this.resetGame();
+            resetButton.innerHTML="Reiniciar";
+            document.body.appendChild(resetButton);
+            pointsText.innerHTML=`Puntos: ${this.currentPoints}/${this.maxPoints}`;
             for (let i = 0; i < this.row; i++) {
                 let tr=document.createElement('tr');
                 table.appendChild(tr);
@@ -74,6 +86,7 @@ class Board {
                     td.dataset.column=j;
                     td.id=`row${td.dataset.row}col${td.dataset.column}`;
                     td.dataset.uncovered=0;
+                    td.dataset.attempts=0;
                     td.setAttribute("class","covered");
 
                     td.addEventListener('click', this.uncoverTile.bind(this));
@@ -100,7 +113,7 @@ class Board {
             this.uncoveredTiles++;
             if(this.uncoveredTiles==1){
                 this.tile1=document.getElementById(`row${tileRow}col${tileCol}`);
-                tile.setAttribute("uncovered",1);
+                tile.dataset.uncovered=1;
                 tile.setAttribute("class","uncovered");
                 tile.innerHTML=this.boardArray[tileRow][tileCol];
             }else if(this.uncoveredTiles==2){
@@ -109,44 +122,69 @@ class Board {
                     this.tile1.setAttribute("class","covered");
                     this.tile1.innerHTML="";
                 }else{
-                    this.tile1.setAttribute("uncovered",1);
+                    this.tile1.dataset.uncovered=1;
                     this.tile1.setAttribute("class","uncovered");
-                    this.tile2.setAttribute("uncovered",1);
+                    this.tile2.dataset.uncovered=1;
                     this.tile2.setAttribute("class","uncovered");
                     tile.innerHTML=this.boardArray[tileRow][tileCol];
 
-                    if(this.tile1.innerHTML==this.tile2.innerHTML){
+                    let tile1Row=this.tile1.dataset.row;
+                    let tile1Col=this.tile1.dataset.column;
+                    let tile2Row=this.tile2.dataset.row;
+                    let tile2Col=this.tile2.dataset.column;
+
+                    if(this.boardArray[tile1Row][tile1Col]==this.boardArray[tile2Row][tile2Col]){
                         this.tile1.setAttribute("class","matched");
                         this.tile2.setAttribute("class","matched");
 
-                        this.tile1.removeEventListener('click', this.uncoverTile);
-                        this.tile2.removeEventListener('click', this.uncoverTile);
+                        this.addPoints();
 
-                        this.pairsMatched++;
-                        if(this.pairsMatched==this.pairsToWin){
-                            this.win();
-                        }
-                    }else if(this.tile1.innerHTML!=this.tile2.innerHTML){
+                        this.uncoveredTiles=0;
+
+                        this.recentFailTile1="";
+                        this.recentFailTile2="";
+
+                    }else if(this.boardArray[tile1Row][tile1Col]!=this.boardArray[tile2Row][tile2Col]){
+                        this.recentFailTile1=this.tile1;
+                        this.recentFailTile2=this.tile2;
                         setTimeout(() => {
                             this.tile1.setAttribute("class","covered");
                             this.tile1.innerHTML="";
+                            this.tile1.dataset.uncovered=0;
                             this.tile2.setAttribute("class","covered");
                             this.tile2.innerHTML="";
+                            this.tile2.dataset.uncovered=0;
                             if(tile.dataset.uncovered==0){
                                 tile.setAttribute("class","covered");
                             }
+                            this.uncoveredTiles=0;
                         }, 200);
                     }
                 }
-                this.uncoveredTiles=0;
             }
+        }
+    }
+
+    resetGame(){
+        console.log("a")
+    }
+
+    addPoints(){
+        this.pairsMatched++;
+        this.currentPoints+=10;
+        let pointsText=document.getElementById("pointsText");
+        pointsText.innerHTML=`Puntos: ${this.currentPoints}/${this.maxPoints}`;
+        this.tile1.removeEventListener('click', this.uncoverTile);
+        this.tile2.removeEventListener('click', this.uncoverTile);
+        if(this.pairsMatched==this.pairsToWin){
+            this.win();
         }
     }
 
     win(){
         setTimeout(() => {
-            alert("¡Has ganado!");
-        }, 1000);
+            alert(`¡Has ganado!\nHas conseguido ${this.currentPoints} puntos de ${this.maxPoints} disponibles.\nLa partida ha durado ${this.gameTimer} segundos.`);
+        }, 500);
     }
 }
 window.onload=()=>{
