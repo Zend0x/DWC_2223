@@ -1,5 +1,4 @@
-//let rowCount = prompt("¿Cuántas filas tendrá que tener el tablero?");
-//let colCount = prompt("¿Cuántas columnas tendrá que tener el tablero?");
+
 
 const images = ["🇭🇰", "🇹🇼", "🇰🇬", "🇲🇳", "🇺🇿", "🇪🇭", "🇲🇴", "🇫🇮", "🇨🇾", "🇳🇵"];
 
@@ -7,6 +6,9 @@ class Board {
     constructor(row, column) {
         this.row = row;
         this.column = column;
+
+        this.rowCount=0;
+        this.colCount=0;
 
         this.uncoveredTiles=0;
         this.pairsMatched=0;
@@ -26,6 +28,9 @@ class Board {
     }
     //Genera el array del tablero.
     generateBoard() {
+
+        //this.rowCount = prompt("¿Cuántas filas tendrá que tener el tablero?");
+        //this.colCount = prompt("¿Cuántas columnas tendrá que tener el tablero?");
 
         this.boardArray = [];
 
@@ -147,15 +152,17 @@ class Board {
                         this.uncoveredTiles=0;
                     }else if(this.boardArray[tile1Row][tile1Col]!=this.boardArray[tile2Row][tile2Col]){
 
+                        this.recentFailTile1=this.tile1;
+                        this.recentFailTile2=this.tile2;
                         let falloReciente=(this.recentFailTile1==this.tile1||this.recentFailTile1==this.tile2||this.recentFailTile2==this.tile1||this.recentFailTile2==this.tile2);
                         //let repitePareja=(this.arrayTablero[this.recentFailTile1.dataset.row][this.arrayTablero[this.recentFailTile1.col]==this.arrayTablero[this.recentFailTile2.dataset.row][this.recentFailTile2.dataset.column]]);
                         if(falloReciente){
                             this.attempts++;
                         }else{
                             this.attempts=0;
+                            this.recentFailTile1="";
+                            this.recentFailTile2="";
                         }
-                        this.recentFailTile1=this.tile1;
-                        this.recentFailTile2=this.tile2;
 
                         
                         setTimeout(() => {
@@ -177,12 +184,15 @@ class Board {
     }
 
     resetGame(){
-        let oldBoard=document.getElementById('boardContainer');
-        oldBoard.remove();
-        let newBoard=new Board(5,4);
-        newBoard.fillBoard();
-        newBoard.printBoard();
-        console.log(newBoard.boardArray);
+        let  confirmacion=confirm("¿Estás seguro de que quieres reiniciar?");
+        if(confirmacion){
+            let oldBoard=document.getElementById('boardContainer');
+            oldBoard.remove();
+            let newBoard=new Board(5,4);
+            newBoard.fillBoard();
+            newBoard.printBoard();
+            console.log(newBoard.boardArray);
+        }
     }
 
     addPoints(tile1,tile2){
@@ -191,10 +201,8 @@ class Board {
         tile1.removeEventListener('click', this.uncoverTile);
         tile2.removeEventListener('click', this.uncoverTile);
         this.pairsMatched++;
-        let repitenParejas=tile1==this.recentFailTile1||tile1==this.recentFailTile||this.recentFailTile2==this.recentFailTile1||this.recentFailTile2==this.recentFailTile2;
-        if(repitenParejas){
-            this.attempts++;
-        }else{
+        let repitenParejas=tile1==this.recentFailTile1||tile1==this.recentFailTile2||tile2==this.recentFailTile1||tile2==this.recentFailTile2;
+        if(!repitenParejas){
             this.attempts=0;
         }
         
