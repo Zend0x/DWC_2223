@@ -1,6 +1,9 @@
 h2{
     text-align: center;
 }
+body{
+    background-color: gray;
+}
 table{
     text-align: center;
     margin-left: auto;

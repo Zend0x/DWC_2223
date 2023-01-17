@@ -14,6 +14,7 @@ class Board {
         this.tile2="";
         this.recentFailTile1="";
         this.recentFailTile2="";
+        this.attempts=0;
 
         this.cellNumber=row*column;
         this.pairsToWin=this.cellNumber/2;
@@ -65,18 +66,25 @@ class Board {
     printBoard() {
         //Comprueba que el número sea divisible entre 2 (es decir, par).
         if ((this.row * this.column) % 2 == 0) {
+            let boardContainer=document.createElement('board');
+            boardContainer.id="boardContainer";
+            document.body.appendChild(boardContainer);
+
             let table=document.createElement('table');
-            document.body.appendChild(table);
+            boardContainer.appendChild(table);
+
             let pointsText=document.createElement('caption');
             pointsText.id="pointsText";
             table.appendChild(pointsText);
+            pointsText.innerHTML=`Puntos: ${this.currentPoints}/${this.maxPoints}`;
+
             let resetButton=document.createElement('button');
             resetButton.type="button";
             resetButton.id="resetButton";
-            resetButton.onclick=this.resetGame();
+            resetButton.addEventListener('click',this.resetGame);
             resetButton.innerHTML="Reiniciar";
-            document.body.appendChild(resetButton);
-            pointsText.innerHTML=`Puntos: ${this.currentPoints}/${this.maxPoints}`;
+            boardContainer.appendChild(resetButton);
+            
             for (let i = 0; i < this.row; i++) {
                 let tr=document.createElement('tr');
                 table.appendChild(tr);
@@ -134,19 +142,22 @@ class Board {
                     let tile2Col=this.tile2.dataset.column;
 
                     if(this.boardArray[tile1Row][tile1Col]==this.boardArray[tile2Row][tile2Col]){
-                        this.tile1.setAttribute("class","matched");
-                        this.tile2.setAttribute("class","matched");
-
-                        this.addPoints();
+                        this.addPoints(this.tile1,this.tile2);
 
                         this.uncoveredTiles=0;
-
-                        this.recentFailTile1="";
-                        this.recentFailTile2="";
-
                     }else if(this.boardArray[tile1Row][tile1Col]!=this.boardArray[tile2Row][tile2Col]){
+
+                        let falloReciente=(this.recentFailTile1==this.tile1||this.recentFailTile1==this.tile2||this.recentFailTile2==this.tile1||this.recentFailTile2==this.tile2);
+                        //let repitePareja=(this.arrayTablero[this.recentFailTile1.dataset.row][this.arrayTablero[this.recentFailTile1.col]==this.arrayTablero[this.recentFailTile2.dataset.row][this.recentFailTile2.dataset.column]]);
+                        if(falloReciente){
+                            this.attempts++;
+                        }else{
+                            this.attempts=0;
+                        }
                         this.recentFailTile1=this.tile1;
                         this.recentFailTile2=this.tile2;
+
+                        
                         setTimeout(() => {
                             this.tile1.setAttribute("class","covered");
                             this.tile1.innerHTML="";
@@ -166,16 +177,46 @@ class Board {
     }
 
     resetGame(){
-        console.log("a")
+        let oldBoard=document.getElementById('boardContainer');
+        oldBoard.remove();
+        let newBoard=new Board(5,4);
+        newBoard.fillBoard();
+        newBoard.printBoard();
+        console.log(newBoard.boardArray);
     }
 
-    addPoints(){
+    addPoints(tile1,tile2){
+        tile1.setAttribute("class","matched");
+        tile2.setAttribute("class","matched");
+        tile1.removeEventListener('click', this.uncoverTile);
+        tile2.removeEventListener('click', this.uncoverTile);
         this.pairsMatched++;
-        this.currentPoints+=10;
+        let repitenParejas=tile1==this.recentFailTile1||tile1==this.recentFailTile||this.recentFailTile2==this.recentFailTile1||this.recentFailTile2==this.recentFailTile2;
+        if(repitenParejas){
+            this.attempts++;
+        }else{
+            this.attempts=0;
+        }
+        
         let pointsText=document.getElementById("pointsText");
+        switch (this.attempts) {
+            case 0:
+                this.currentPoints+=10;
+                break;
+            case 1:
+                this.currentPoints+=5
+                break;
+            case 2:
+                this.currentPoints+=2.5
+                break;
+            default:
+                this.currentPoints+=0;
+                break;
+        }
+        this.attempts=0;
+        this.recentFailTile1="";
+        this.recentFailTile2="";
         pointsText.innerHTML=`Puntos: ${this.currentPoints}/${this.maxPoints}`;
-        this.tile1.removeEventListener('click', this.uncoverTile);
-        this.tile2.removeEventListener('click', this.uncoverTile);
         if(this.pairsMatched==this.pairsToWin){
             this.win();
         }
