@@ -22,7 +22,9 @@ class Board {
         this.pairsToWin=this.cellNumber/2;
         this.maxPoints=this.pairsToWin*10;
         this.currentPoints=0;
-        this.gameTimer=0;
+
+        this.startTime="";
+        this.endTime="";
 
         this.generateBoard();
     }
@@ -69,6 +71,9 @@ class Board {
     }
     //Imprime el array por pantalla en forma de tabla.
     printBoard() {
+        /*Toma la hora de impresión del tablero, haciendo que guarde en qué momento se acabó de imprimir el teclado (o lo
+        que es igual, cuándo empezo la partida.)*/
+        this.startTime=new Date();
         //Comprueba que el número sea divisible entre 2 (es decir, par).
         if ((this.row * this.column) % 2 == 0) {
             let boardContainer=document.createElement('board');
@@ -184,6 +189,8 @@ class Board {
     }
 
     resetGame(){
+        this.gameActive=false;
+        console.log(this.gameSeconds);
         let  confirmacion=confirm("¿Estás seguro de que quieres reiniciar?");
         if(confirmacion){
             let oldBoard=document.getElementById('boardContainer');
@@ -200,8 +207,8 @@ class Board {
         tile2.setAttribute("class","matched");
         tile1.removeEventListener('click', this.uncoverTile);
         tile2.removeEventListener('click', this.uncoverTile);
-        this.pairsMatched++;
         let repitenParejas=tile1==this.recentFailTile1||tile1==this.recentFailTile2||tile2==this.recentFailTile1||tile2==this.recentFailTile2;
+        this.pairsMatched++;
         if(!repitenParejas){
             this.attempts=0;
         }
@@ -225,14 +232,18 @@ class Board {
         this.recentFailTile1="";
         this.recentFailTile2="";
         pointsText.innerHTML=`Puntos: ${this.currentPoints}/${this.maxPoints}`;
+
         if(this.pairsMatched==this.pairsToWin){
             this.win();
         }
     }
 
     win(){
+        this.endTime=new Date();
+        let finalTime=Math.floor((this.endTime-this.startTime)/1000);
+        console.log(finalTime);
         setTimeout(() => {
-            alert(`¡Has ganado!\nHas conseguido ${this.currentPoints} puntos de ${this.maxPoints} disponibles.\nLa partida ha durado ${this.gameTimer} segundos.`);
+            alert(`¡Has ganado!\nHas conseguido ${this.currentPoints} puntos de ${this.maxPoints} disponibles.\nLa partida ha durado ${finalTime} segundos.`);
         }, 500);
     }
 }
