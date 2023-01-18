@@ -153,22 +153,22 @@ class Board {
 
                     if(this.boardArray[tile1Row][tile1Col]==this.boardArray[tile2Row][tile2Col]){
                         this.addPoints(this.tile1,this.tile2);
-
                         this.uncoveredTiles=0;
                     }else if(this.boardArray[tile1Row][tile1Col]!=this.boardArray[tile2Row][tile2Col]){
-
-                        this.recentFailTile1=this.tile1;
-                        this.recentFailTile2=this.tile2;
-                        let falloReciente=(this.recentFailTile1==this.tile1||this.recentFailTile1==this.tile2||this.recentFailTile2==this.tile1||this.recentFailTile2==this.tile2);
-                        //let repitePareja=(this.arrayTablero[this.recentFailTile1.dataset.row][this.arrayTablero[this.recentFailTile1.col]==this.arrayTablero[this.recentFailTile2.dataset.row][this.recentFailTile2.dataset.column]]);
-                        if(falloReciente){
+                        
+                        let repeatsPair=(this.tile1==this.recentFailTile1&&this.tile2==this.recentFailTile2)||(this.tile1==this.recentFailTile2&&this.tile2==this.recentFailTile1);
+                        let repeatsTile1=this.tile1==this.recentFailTile1||this.tile1==this.recentFailTile2;
+                        let repeatsTile2=this.tile2==this.recentFailTile1||this.tile2==this.recentFailTile2;
+                        if(repeatsPair){
                             this.attempts++;
-                        }else{
-                            this.attempts=0;
-                            this.recentFailTile1="";
-                            this.recentFailTile2="";
+                        }else if(repeatsTile1||repeatsTile2){
+                            this.attempts++;
+                            this.recentFailTile1=this.tile1;
+                            this.recentFailTile2=this.tile2;
+                        }else if(!repeatsPair){
+                            this.recentFailTile1=this.tile1;
+                            this.recentFailTile2=this.tile2;
                         }
-
                         
                         setTimeout(() => {
                             this.tile1.setAttribute("class","covered");
@@ -207,11 +207,7 @@ class Board {
         tile2.setAttribute("class","matched");
         tile1.removeEventListener('click', this.uncoverTile);
         tile2.removeEventListener('click', this.uncoverTile);
-        let repitenParejas=tile1==this.recentFailTile1||tile1==this.recentFailTile2||tile2==this.recentFailTile1||tile2==this.recentFailTile2;
         this.pairsMatched++;
-        if(!repitenParejas){
-            this.attempts=0;
-        }
         
         let pointsText=document.getElementById("pointsText");
         switch (this.attempts) {
