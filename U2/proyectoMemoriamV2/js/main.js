@@ -1,14 +1,9 @@
-
-
 const images = ["🇭🇰", "🇹🇼", "🇰🇬", "🇲🇳", "🇺🇿", "🇪🇭", "🇲🇴", "🇫🇮", "🇨🇾", "🇳🇵"];
 
-class Board {
+class Memorin {
     constructor(row, column) {
         this.row = row;
         this.column = column;
-
-        this.rowCount=0;
-        this.colCount=0;
 
         this.uncoveredTiles=0;
         this.pairsMatched=0;
@@ -30,10 +25,6 @@ class Board {
     }
     //Genera el array del tablero.
     generateBoard() {
-
-        //this.rowCount = prompt("¿Cuántas filas tendrá que tener el tablero?");
-        //this.colCount = prompt("¿Cuántas columnas tendrá que tener el tablero?");
-
         this.boardArray = [];
 
         for (let row = 0; row < this.row; row++) {
@@ -75,7 +66,7 @@ class Board {
         que es igual, cuándo empezo la partida.)*/
         this.startTime=new Date();
         //Comprueba que el número sea divisible entre 2 (es decir, par).
-        if ((this.row * this.column) % 2 == 0) {
+        if (this.cellNumber % 2 == 0) {
             let boardContainer=document.createElement('board');
             boardContainer.id="boardContainer";
             document.body.appendChild(boardContainer);
@@ -114,34 +105,42 @@ class Board {
             };
         //En caso de que no, lanza una alerta por el navegador avisando de que 
         //los números no son correctos.
-        } else if (cellCounter % 2 != 0) {
+        } else if (this.cellNumber % 2 != 0) {
             alert("¡El tablero no tiene capacidad de alojar parejas pares! Introduce nuevos números.");
+            let rowCount = prompt("¿Cuántas filas tendrá que tener el tablero?");
+            let colCount = prompt("¿Cuántas columnas tendrá que tener el tablero?");
+            let board1 = new Memorin(rowCount, colCount);
+            board1.fillBoard();
+            board1.printBoard();
         }
 
     }
 
     uncoverTile(event){
+        //Defino las variables que voy a necesitar más adelante. Una define el evento de la casilla,
+        //otra guarda el valor de la casilla, que obtiene a través del evento. Después saco filas y columnas
+        //de la casilla.
         let tileEvent=event||window.event;
         let tile=tileEvent.currentTarget;
         let tileRow=tile.dataset.row;
         let tileCol=tile.dataset.column;
 
-
+        //Aquí comprueba si la casilla está descubierta o no a través de su propiedad del dataset.
         if(tile.dataset.uncovered==0){
-            this.uncoveredTiles++;
-            if(this.uncoveredTiles==1){
+            this.uncoveredTiles++; //Sumamos uno a la variable de casillas descubiertas. A través de esta variable,
+            if(this.uncoveredTiles==1){ //puede comprobar cuántas casillas hay destapadas simultáneamente y saber qué hacer.
                 this.tile1=document.getElementById(`row${tileRow}col${tileCol}`);
                 tile.dataset.uncovered=1;
                 tile.setAttribute("class","uncovered");
                 tile.innerHTML=this.boardArray[tileRow][tileCol];
             }else if(this.uncoveredTiles==2){
                 this.tile2=document.getElementById(`row${tileRow}col${tileCol}`);
-                if(this.tile2.id==this.tile1.id){
+                if(this.tile2.id==this.tile1.id){ //Si el ID de la casilla es igual, la vuelve a cubrir.
                     this.tile1.setAttribute("class","covered");
                     this.tile1.innerHTML="";
                 }else{
-                    this.tile1.dataset.uncovered=1;
-                    this.tile1.setAttribute("class","uncovered");
+                    this.tile1.dataset.uncovered=1; //Marca ambas casillas como descubiertas en el dataset, y les pone
+                    this.tile1.setAttribute("class","uncovered"); //la clase "uncovered" para el CSS.
                     this.tile2.dataset.uncovered=1;
                     this.tile2.setAttribute("class","uncovered");
                     tile.innerHTML=this.boardArray[tileRow][tileCol];
@@ -150,28 +149,24 @@ class Board {
                     let tile1Col=this.tile1.dataset.column;
                     let tile2Row=this.tile2.dataset.row;
                     let tile2Col=this.tile2.dataset.column;
-
+                    //Si el contenido de ambas celdas es igual, llama a la función "addPoints" y le pasa las casillas
                     if(this.boardArray[tile1Row][tile1Col]==this.boardArray[tile2Row][tile2Col]){
                         this.addPoints(this.tile1,this.tile2);
                         this.uncoveredTiles=0;
                     }else if(this.boardArray[tile1Row][tile1Col]!=this.boardArray[tile2Row][tile2Col]){
-                        
-                        let repeatsPair=(this.tile1==this.recentFailTile1&&this.tile2==this.recentFailTile2)||(this.tile1==this.recentFailTile2&&this.tile2==this.recentFailTile1);
-                        let repeatsTile1=this.tile1==this.recentFailTile1||this.tile1==this.recentFailTile2;
-                        let repeatsTile2=this.tile2==this.recentFailTile1||this.tile2==this.recentFailTile2;
-                        if(repeatsPair){
-                            this.attempts++;
-                        }else if(repeatsTile1||repeatsTile2){
-                            this.attempts++;
-                            this.recentFailTile1=this.tile1;
-                            this.recentFailTile2=this.tile2;
-                        }else if(!repeatsPair){
-                            this.recentFailTile1=this.tile1;
-                            this.recentFailTile2=this.tile2;
+                        //Esta variable define si es un fallo reciente, es decir: si alguna de las casillas se ha usado en el fallo anterior.
+                        let falloReciente=(this.recentFailTile1==this.tile1||this.recentFailTile1==this.tile2||this.recentFailTile2==this.tile1||this.recentFailTile2==this.tile2);
+                        if(falloReciente){
+                            this.attempts++;//Si se ha usado antes: +1 intento
+                        }else{
+                            this.attempts=0;//Si no: contador a 0 y reinicializamos las variables auxiliares.
+                            this.recentFailTile1="";
+                            this.recentFailTile2="";
                         }
-                        
-                        setTimeout(() => {
-                            this.tile1.setAttribute("class","covered");
+                        this.recentFailTile1=this.tile1;
+                        this.recentFailTile2=this.tile2;
+                        setTimeout(() => { //Este timeout sirve para que las casillas se mantengan destapadas unos instantes,
+                            this.tile1.setAttribute("class","covered");// permitiendo al jugador verlas después de fallar.
                             this.tile1.innerHTML="";
                             this.tile1.dataset.uncovered=0;
                             this.tile2.setAttribute("class","covered");
@@ -189,13 +184,13 @@ class Board {
     }
 
     resetGame(){
-        this.gameActive=false;
-        console.log(this.gameSeconds);
-        let  confirmacion=confirm("¿Estás seguro de que quieres reiniciar?");
-        if(confirmacion){
+        this.gameActive=false;//Se pone la variable "gameActive" en "false" para que pare el tiempo.
+
+        let confirmacion=confirm("¿Estás seguro de que quieres reiniciar?");//Confirma si quiere reiniciar
+        if(confirmacion){//En caso de que sí, borra el tag que contiene todo y vuelve a ejecutar las funciones
             let oldBoard=document.getElementById('boardContainer');
             oldBoard.remove();
-            let newBoard=new Board(5,4);
+            let newBoard=new Memorin(5,4);
             newBoard.fillBoard();
             newBoard.printBoard();
             console.log(newBoard.boardArray);
@@ -203,13 +198,17 @@ class Board {
     }
 
     addPoints(tile1,tile2){
-        tile1.setAttribute("class","matched");
+        tile1.setAttribute("class","matched");//Pone las casillas con la clase "matched" de CSS, que pone el fondo verde
         tile2.setAttribute("class","matched");
-        tile1.removeEventListener('click', this.uncoverTile);
+        tile1.removeEventListener('click', this.uncoverTile);//Quita el eventListener para que no puedan ser clicadas más
         tile2.removeEventListener('click', this.uncoverTile);
-        this.pairsMatched++;
+        this.pairsMatched++;//Añade uno al contador de parejas resueltas
+        let falloReciente=(this.recentFailTile1==this.tile1||this.recentFailTile1==this.tile2||this.recentFailTile2==this.tile1||this.recentFailTile2==this.tile2);
+        if(falloReciente){
+            this.attempts++;
+        }
         
-        let pointsText=document.getElementById("pointsText");
+        let pointsText=document.getElementById("pointsText");//Obtiene el texto de los puntos que hay sobre el tablero
         switch (this.attempts) {
             case 0:
                 this.currentPoints+=10;
@@ -226,25 +225,27 @@ class Board {
         }
         this.attempts=0;
         this.recentFailTile1="";
-        this.recentFailTile2="";
-        pointsText.innerHTML=`Puntos: ${this.currentPoints}/${this.maxPoints}`;
+        this.recentFailTile2="";//Quita los intentos y reinicializa las variables.
+        pointsText.innerHTML=`Puntos: ${this.currentPoints}/${this.maxPoints}`;//Cambia el texto de los puntos con el nuevo número
 
-        if(this.pairsMatched==this.pairsToWin){
+        if(this.pairsMatched==this.pairsToWin){//Comprueba si ya se han resuelto las variables necesarias para ganar
             this.win();
         }
     }
 
     win(){
         this.endTime=new Date();
-        let finalTime=Math.floor((this.endTime-this.startTime)/1000);
-        console.log(finalTime);
+        let finalTime=Math.floor((this.endTime-this.startTime)/1000);//Obtiene el tiempo total (en milisegundos) y
+                                                                    //lo divide entre 1000 para redondear en segundos.
         setTimeout(() => {
             alert(`¡Has ganado!\nHas conseguido ${this.currentPoints} puntos de ${this.maxPoints} disponibles.\nLa partida ha durado ${finalTime} segundos.`);
         }, 500);
     }
 }
 window.onload=()=>{
-    let board1 = new Board(5, 4);
+    let rowCount = prompt("¿Cuántas filas tendrá que tener el tablero?");
+    let colCount = prompt("¿Cuántas columnas tendrá que tener el tablero?");
+    let board1 = new Memorin(rowCount, colCount);
     board1.fillBoard();
     board1.printBoard();
     console.log(board1.boardArray);
