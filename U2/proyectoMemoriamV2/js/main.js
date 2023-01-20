@@ -66,53 +66,65 @@ class Memorin {
         que es igual, cuándo empezo la partida.)*/
         this.startTime=new Date();
         //Comprueba que el número sea divisible entre 2 (es decir, par).
-        if (this.cellNumber % 2 == 0) {
-            let boardContainer=document.createElement('board');
-            boardContainer.id="boardContainer";
-            document.body.appendChild(boardContainer);
-
-            let table=document.createElement('table');
-            boardContainer.appendChild(table);
-
-            let pointsText=document.createElement('caption');
-            pointsText.id="pointsText";
-            table.appendChild(pointsText);
-            pointsText.innerHTML=`Puntos: ${this.currentPoints}/${this.maxPoints}`;
-
-            let resetButton=document.createElement('button');
-            resetButton.type="button";
-            resetButton.id="resetButton";
-            resetButton.addEventListener('click',this.resetGame);
-            resetButton.innerHTML="Reiniciar";
-            boardContainer.appendChild(resetButton);
-            
-            for (let i = 0; i < this.row; i++) {
-                let tr=document.createElement('tr');
-                table.appendChild(tr);
-                for (let j = 0; j < this.column; j++) {
-                    let td=document.createElement('td');
-                    td.dataset.row=i;
-                    td.dataset.column=j;
-                    td.id=`row${td.dataset.row}col${td.dataset.column}`;
-                    td.dataset.uncovered=0;
-                    td.dataset.attempts=0;
-                    td.setAttribute("class","covered");
-
-                    td.addEventListener('click', this.uncoverTile.bind(this));
-
-                    tr.appendChild(td);
-                }
-            };
-        //En caso de que no, lanza una alerta por el navegador avisando de que 
-        //los números no son correctos.
-        } else if (this.cellNumber % 2 != 0) {
-            alert("¡El tablero no tiene capacidad de alojar parejas pares! Introduce nuevos números.");
+        let notOversized=this.row<=16&&this.column<=16;
+        let notUndersized=this.row>=4&&this.column>=4;
+        if(notUndersized&&notOversized){
+            if (this.cellNumber % 2 == 0) {
+                let boardContainer=document.createElement('board');
+                boardContainer.id="boardContainer";
+                document.body.appendChild(boardContainer);
+    
+                let table=document.createElement('table');
+                boardContainer.appendChild(table);
+    
+                let pointsText=document.createElement('caption');
+                pointsText.id="pointsText";
+                table.appendChild(pointsText);
+                pointsText.innerHTML=`Puntos: ${this.currentPoints}/${this.maxPoints}`;
+    
+                let resetButton=document.createElement('button');
+                resetButton.type="button";
+                resetButton.id="resetButton";
+                resetButton.addEventListener('click',this.resetGame);
+                resetButton.innerHTML="Reiniciar";
+                boardContainer.appendChild(resetButton);
+                
+                for (let i = 0; i < this.row; i++) {
+                    let tr=document.createElement('tr');
+                    table.appendChild(tr);
+                    for (let j = 0; j < this.column; j++) {
+                        let td=document.createElement('td');
+                        td.dataset.row=i;
+                        td.dataset.column=j;
+                        td.id=`row${td.dataset.row}col${td.dataset.column}`;
+                        td.dataset.uncovered=0;
+                        td.dataset.attempts=0;
+                        td.setAttribute("class","covered");
+    
+                        td.addEventListener('click', this.uncoverTile.bind(this));
+    
+                        tr.appendChild(td);
+                    }
+                };
+            //En caso de que no, lanza una alerta por el navegador avisando de que 
+            //los números no son correctos.
+            } else if (this.cellNumber % 2 != 0) {
+                alert("¡El tablero no tiene capacidad de alojar parejas pares! Introduce nuevos números.");
+                let rowCount = prompt("¿Cuántas filas tendrá que tener el tablero?");
+                let colCount = prompt("¿Cuántas columnas tendrá que tener el tablero?");
+                let board1 = new Memorin(rowCount, colCount);
+                board1.fillBoard();
+                board1.printBoard();
+            }
+        }else{
+            alert("Dimensiones inválidas. Por favor, introduce cantidades mayores a 4 y menores a 16.");
             let rowCount = prompt("¿Cuántas filas tendrá que tener el tablero?");
             let colCount = prompt("¿Cuántas columnas tendrá que tener el tablero?");
             let board1 = new Memorin(rowCount, colCount);
             board1.fillBoard();
             board1.printBoard();
         }
+        
 
     }
 
