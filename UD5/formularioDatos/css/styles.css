@@ -1,0 +1,23 @@
+.contenedor{
+    margin: auto;
+    width: 15%;
+    padding: 10px;
+}
+
+#label{
+    text-align: left;
+}
+
+input{
+    margin-top: 1%;
+}
+
+.inputIncorrecto{
+    border: 2px solid red;
+    border-radius: 5px;
+}
+
+.inputBien{
+    border: 2px solid green;
+    border-radius: 5px;
+}
