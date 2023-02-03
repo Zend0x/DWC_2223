@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plantaLiquidos>
+    <contenedores>
+        <contenedor tipo="grande" aceptan="grandes">
+
+            <envase tipo="grandeAncho">
+                <liquido tipo="alimento">
+                    Agua
+                    Leche
+                    Aceite
+                    Vinagre
+                    Alcohol
+                </liquido>
+            </envase>
+            
+        </contenedor>
+
+        <contenedor tipo="mediano" aceptan="no-grandes">
+
+            <envase tipo="medianoAncho">
+                <liquido tipo="alimento">
+                    Agua
+                    Leche
+                    Aceite
+                    Vinagre
+                    Alcohol
+                </liquido>
+            </envase>
+
+            <envase tipo="pequeno">
+                <liquido tipo="corrosivo">
+                    Lejia
+                    Amoniaco
+                    Jabon
+                    Aguarras
+                </liquido>
+            </envase>
+        </contenedor>
+
+        <contenedor tipo="vertical" aceptan="altos">
+
+            <envase tipo="grandeAlto">
+                <liquido tipo="alimento">
+                    Agua
+                    Leche
+                    Aceite
+                    Vinagre
+                    Alcohol
+                </liquido>
+            </envase>
+
+            <envase tipo="medianoAlto">
+                <liquido tipo="corrosivo">
+                    Lejia
+                    Amoniaco
+                    Jabon
+                    Aguarras
+                </liquido>
+            </envase>
+        </contenedor>
+
+    </contenedores>
+</plantaLiquidos>
