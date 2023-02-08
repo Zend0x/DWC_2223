@@ -5,11 +5,10 @@
 
             <envase tipo="grandeAncho">
                 <liquido tipo="alimento">
-                    Agua
-                    Leche
-                    Aceite
-                    Vinagre
-                    Alcohol
+                    <liquido tipo="alimento">Agua</liquido>
+                    <liquido tipo="alimento">Leche</liquido>
+                    <liquido tipo="alimento">Aceite</liquido>
+                    <liquido tipo="alimento">Vinagre</liquido>
                 </liquido>
             </envase>
             
@@ -19,20 +18,21 @@
 
             <envase tipo="medianoAncho">
                 <liquido tipo="alimento">
-                    Agua
-                    Leche
-                    Aceite
-                    Vinagre
-                    Alcohol
+                    <liquido tipo="alimento">Agua</liquido>
+                    <liquido tipo="alimento">Leche</liquido>
+                    <liquido tipo="alimento">Aceite</liquido>
+                    <liquido tipo="alimento">Vinagre</liquido>
                 </liquido>
             </envase>
 
             <envase tipo="pequeno">
                 <liquido tipo="corrosivo">
-                    Lejia
-                    Amoniaco
-                    Jabon
-                    Aguarras
+                    <liquido tipo="corrosivo">Lejía</liquido>
+                    <liquido tipo="corrosivo">Amoníaco</liquido>
+                    <liquido tipo="corrosivo">Jabón</liquido>
+                    <liquido tipo="corrosivo">Aguarrás</liquido>
+                    <liquido tipo="corrosivo">Alcohol</liquido>
+                    <liquido tipo="corrosivo">Gasolina</liquido>
                 </liquido>
             </envase>
         </contenedor>
@@ -41,11 +41,10 @@
 
             <envase tipo="grandeAlto">
                 <liquido tipo="alimento">
-                    Agua
-                    Leche
-                    Aceite
-                    Vinagre
-                    Alcohol
+                    <liquido tipo="alimento">Agua</liquido>
+                    <liquido tipo="alimento">Leche</liquido>
+                    <liquido tipo="alimento">Aceite</liquido>
+                    <liquido tipo="alimento">Vinagre</liquido>
                 </liquido>
             </envase>
 
