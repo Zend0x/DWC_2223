@@ -13,7 +13,7 @@ registroPacientes.forEach((value,key)=>{
     let numeroSS=value.split(" ",3)
     let direccion=value.split(") -> ");
     console.log("dir:"+direccion);
-    let texto="\nnumeroRegistro: "+key+" \nnombreCompleto: "+nombrePaciente+". \nnumeroSS: "+numeroSS[2]+" \ndirección: "+direccion[1];
+    let texto="\nnumeroRegistro: "+key+", \nnombreCompleto: "+nombrePaciente+". \nnumeroSS: "+numeroSS[2]+" \ndirección: "+direccion[1];
     nuevoMapa.set(`Paciente ${i}`,texto);
 })
 
