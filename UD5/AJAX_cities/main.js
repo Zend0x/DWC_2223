@@ -5,13 +5,17 @@ function ensenarPista(letras){
         sugerencias.innerHTML="";
         return;
     }else{
-        console.log("xD");
         const solicitud=new XMLHttpRequest();
         solicitud.onreadystatechange=function(){
-            let sugerencias=document.getElementById("sugerencias");
-            sugerencias.innerHTML="Prueba con: "+this.responseText;
-            console.log(solicitud.responseText);
+            if(solicitud.readyState==4 && solicitud.status==200){
+                let sugerencias=document.getElementById("sugerencias");
+                sugerencias.innerHTML="Prueba con: "+this.responseText;
+                console.log(solicitud.responseText);
+            }else{
+                console.log("no lol");
+            }
         }
+        console.log("obtenerPista.php?letra="+letras);
         solicitud.open("GET","obtenerPista.php?letra="+letras);
         solicitud.send;
     }

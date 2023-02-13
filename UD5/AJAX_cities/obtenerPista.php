@@ -3,7 +3,7 @@
     header("Content-type:aplication/json");
     ini_set('display_errors', 1);
     ini_set('html_errors', 1);
-    $letra=$_REQUEST["letra"];
+    $letra="a";
     if($letra!=""){
         function obtener($letra){
             $conexion=mysqli_connect('localhost','root','12345');
