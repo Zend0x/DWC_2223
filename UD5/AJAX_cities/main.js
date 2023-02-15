@@ -1,16 +1,15 @@
 function ensenarPista(letras){
+    letras=this.value;
     if(letras.length==0){
         let sugerencias=document.getElementById("sugerencias");
         sugerencias.innerHTML="";
         return;
     }else{
-        const solicitud=new XMLHttpRequest();
-        solicitud.onreadystatechange=function(){
-            let sugerencias=document.getElementById("sugerencias");
-            sugerencias.innerHTML="¿Quieres decir "+this.responseText+"?";
-            console.log(solicitud.responseText);
-        }
-        solicitud.open("GET","php/obtenerPista.php?letra="+letras);
-        solicitud.send;
+        //idk hacer que vaya la solicitud (someway)
     }
 }
+
+window.onload = (event) => {
+    let campoDeTexto=document.getElementById("ciudad");
+    campoDeTexto.addEventListener('keyup',ensenarPista);
+};

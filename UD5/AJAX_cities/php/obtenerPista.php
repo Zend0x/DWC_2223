@@ -1,31 +1,31 @@
 <?php
-    header("access-control-allow-origin: *");
-    ini_set('display_errors', 1);
-    ini_set('html_errors', 1);
-    $letra=$_REQUEST['letra'];
-            $conexion=mysqli_connect('localhost','root','12345');
-            if(mysqli_connect_errno()){
-                echo "Error al conectar a MySQL.";
-            }
-            mysqli_select_db($conexion,'world');
-            $consulta=mysqli_prepare($conexion,'SELECT Name FROM city;');
-            $consulta->execute();
-            $result=$consulta->get_result();
-    
-            $resultados=array();
-            while($myrow=$result->fetch_assoc()){
-              array_push($resultados,$myrow);
-            }
+  header("access-control-allow-origin: *");
+  ini_set('display_errors', 1);
+  ini_set('html_errors', 1);
+  $letra = $_REQUEST['letra'];
+  $conexion = mysqli_connect('localhost', 'root', '12345');
+  if (mysqli_connect_errno()) {
+    echo "Error al conectar a MySQL.";
+  }
+  mysqli_select_db($conexion, 'world');
+  $consulta = mysqli_prepare($conexion, 'SELECT Name FROM city;');
+  $consulta->execute();
+  $result = $consulta->get_result();
 
-            $pista="";
-            foreach($resultados as $ciudad) {
-                if (stristr($letra, substr($ciudad['Name'], 0, strlen($letra)))) {
-                  if ($pista === "") {
-                    $pista = $ciudad['Name'];
-                  } else {
-                    $pista .= ",". $ciudad['Name'];
-                  }
-                }
-        }
+  $resultados = array();
+  while ($myrow = $result->fetch_assoc()) {
+    array_push($resultados, $myrow);
+  }
 
-echo $pista===""?"No hay sugerencias":$pista;
+  $pista = "";
+  foreach ($resultados as $ciudad) {
+    if (stristr($letra, substr($ciudad['Name'], 0, strlen($letra)))) {
+      if ($pista === "") {
+        $pista = $ciudad['Name'];
+      } else {
+        $pista .= ", " . $ciudad['Name'];
+      }
+    }
+  }
+
+  echo $pista === "" ? "No hay sugerencias" : $pista;
