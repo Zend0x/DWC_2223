@@ -8,7 +8,8 @@
     echo "Error al conectar a MySQL.";
   }
   mysqli_select_db($conexion, 'world');
-  $consulta = mysqli_prepare($conexion, 'SELECT Name FROM city;');
+  $consulta = mysqli_prepare($conexion, 'SELECT Name FROM city 
+  WHERE Name LIKE "'.$letra.'%";');
   $consulta->execute();
   $result = $consulta->get_result();
 
