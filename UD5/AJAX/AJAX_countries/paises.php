@@ -17,15 +17,5 @@
   while ($myrow = $result->fetch_assoc()) {
     array_push($resultados, $myrow);
   }
-
-  echo "<table>";
-  echo "<tr>";
-  echo "<th>Países</th>";
-  echo "</tr>";
-  foreach($resultados as $pais){
-    echo "<tr>";
-    echo "<td>".$pais['Name']."</td>";
-    echo "</tr>";
-  }
   
-  echo "</table>";
+  echo json_encode($resultados);

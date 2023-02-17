@@ -28,7 +28,7 @@ if(!isset($_GET['nombrePais'])&&!isset($_GET['nombreCiudad'])){
     echo "Error al conectar a MySQL.";
   }
   mysqli_select_db($conexion, 'world');
-  $consulta = mysqli_prepare($conexion, 'SELECT city.Name as "nombreCiudad", city.countryCode, country.Name FROM city 
+  $consulta = mysqli_prepare($conexion, 'SELECT city.ID, city.Name as "nombreCiudad", city.countryCode, country.Name FROM city 
   INNER JOIN country ON countryCode=country.Code
   WHERE country.Name = "'.$paisSeleccionado.'";');
   $consulta->execute();
@@ -43,15 +43,16 @@ if(!isset($_GET['nombrePais'])&&!isset($_GET['nombreCiudad'])){
 }else if(isset($_GET['nombreCiudad'])&&!empty($_GET['nombreCiudad'])){
   header("access-control-allow-origin: *");
   $ciudadSeleccionada=$_GET['nombreCiudad'];
+  $id_ciudad=$_GET['id_ciudad'];
   $conexion = mysqli_connect('localhost', 'root', '12345');
   if (mysqli_connect_errno()) {
     echo "Error al conectar a MySQL.";
   }
   mysqli_select_db($conexion, 'world');
-  $consulta = mysqli_prepare($conexion, 'SELECT city.Name, city.district, city.population, country.Name
+  $consulta = mysqli_prepare($conexion, 'SELECT city.ID, city.Name, city.district, city.population
   FROM city 
   INNER JOIN country ON countryCode=country.Code
-  WHERE city.Name = "'.$ciudadSeleccionada.'" AND city.CountryCode LIKE country.Code;');
+  WHERE city.Name = "'.$ciudadSeleccionada.'" AND WHERE city.ID='.$id_ciudad.';');
   $consulta->execute();
   $result = $consulta->get_result();
 

@@ -17,11 +17,15 @@ if(!isset($_GET['nombrePais'])&&!isset($_GET['nombreCiudad'])){
   while ($myrow = $result->fetch_assoc()) {
     array_push($resultados, $myrow);
   }
-
-  echo '<option value="">Selecciona un país.</option>';
+  $paises="";
   foreach($resultados as $pais){
-    echo '<option value="'.$pais['Name'].'">'.$pais['Name'].'</option>';
+    if ($paises === "") {
+      $paises = $pais['Name'];
+    } else {
+      $paises .= ", " . $pais['Name'];
+    }
   }
+  echo $paises;
 
 }else if(isset($_GET['nombrePais'])&&!empty($_GET['nombrePais'])){
   header("access-control-allow-origin: *");
@@ -31,7 +35,7 @@ if(!isset($_GET['nombrePais'])&&!isset($_GET['nombreCiudad'])){
     echo "Error al conectar a MySQL.";
   }
   mysqli_select_db($conexion, 'world');
-  $consulta = mysqli_prepare($conexion, 'SELECT city.Name as "nombreCiudad", city.countryCode, country.Name FROM city 
+  $consulta = mysqli_prepare($conexion, 'SELECT city.Name, city.countryCode FROM city 
   INNER JOIN country ON countryCode=country.Code
   WHERE country.Name = "'.$paisSeleccionado.'";');
   $consulta->execute();
@@ -42,10 +46,16 @@ if(!isset($_GET['nombrePais'])&&!isset($_GET['nombreCiudad'])){
     array_push($resultados, $myrow);
   }
   
-  echo '<option value="">Selecciona una ciudad</option>';
+  $ciudades="";
   foreach($resultados as $ciudad){
-    echo '<option value="'.$ciudad['nombreCiudad'].'">'.$ciudad['nombreCiudad'].'</option>';
+    if ($ciudades === "") {
+      $ciudades = $ciudad['Name'];
+    } else {
+      $ciudades .= ", " . $ciudad['Name'];
+    }
   }
+  echo $ciudades;
+
 }else if(isset($_GET['nombreCiudad'])&&!empty($_GET['nombreCiudad'])){
   header("access-control-allow-origin: *");
   $ciudadSeleccionada=$_GET['nombreCiudad'];
@@ -54,7 +64,7 @@ if(!isset($_GET['nombrePais'])&&!isset($_GET['nombreCiudad'])){
     echo "Error al conectar a MySQL.";
   }
   mysqli_select_db($conexion, 'world');
-  $consulta = mysqli_prepare($conexion, 'SELECT city.Name, city.district, city.population, country.Name
+  $consulta = mysqli_prepare($conexion, 'SELECT city.Name, city.district, city.population
   FROM city 
   INNER JOIN country ON countryCode=country.Code
   WHERE city.Name = "'.$ciudadSeleccionada.'" AND city.CountryCode LIKE country.Code;');
@@ -65,9 +75,14 @@ if(!isset($_GET['nombrePais'])&&!isset($_GET['nombreCiudad'])){
   while ($myrow = $result->fetch_assoc()) {
     array_push($resultados, $myrow);
   }
-  foreach($resultados as $ciudad){
-    echo '<h1>'.$ciudad['Name'].'</h1>';
-    echo '<p>Distrito: <strong>'.$ciudad['district'].'</strong></p>';
-    echo '<p>Población: <strong>'.$ciudad['population'].'</strong></p>';
+ 
+  $datosDistrito="";
+  foreach($resultados as $distrito){
+    if ($datosDistrito === "") {
+      $datosDistrito = $distrito['Name'].", ".$distrito['district'].", ".$distrito['population'];
+    } else {
+      $datosDistrito .= ", " . $distrito['Name'].", ".$distrito['district'].", ".$distrito['population'];
+    }
   }
+  echo $datosDistrito;
 }

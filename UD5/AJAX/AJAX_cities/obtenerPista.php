@@ -29,4 +29,4 @@
     }
   }
 
-  echo $pista === "" ? "No hay sugerencias" : $pista;
+  echo $pista;

@@ -7,15 +7,27 @@ function ensenarPaises(letra){
     const solicitud=new XMLHttpRequest();
     solicitud.onload=function(){
         if(this.readyState == 4 && this.status == 200){
-            document.getElementById("paises").innerHTML=this.responseText;
+            let divPaises=document.getElementById("paises");
+            divPaises.innerHTML="";
+            let jsonDatos=JSON.parse(this.responseText);
+            console.log(jsonDatos[0]);
+            let nodoTabla=document.createElement("table");
+            nodoTabla.id="tablaPaises";
+            for(let i=0;i<jsonDatos.length;i++){
+                let nodoFila=document.createElement("tr");
+                nodoTabla.appendChild(nodoFila);
+                let nodoColumna=document.createElement("td");
+                nodoColumna.innerHTML=jsonDatos[i]['Name'];
+                nodoFila.appendChild(nodoColumna);
+            }
+            divPaises.appendChild(nodoTabla);
         }
     }
     solicitud.open("GET","paises.php?letra="+letra);
     solicitud.send();
 }
 
-
-window.onload = (event) => {
+window.onload = function() {
     let seleccion=document.getElementById("letraInicial");
-    seleccion.addEventListener('change',ensenarPaises);
-};
+    seleccion.addEventListener('change',ensenarPaises); 
+}
