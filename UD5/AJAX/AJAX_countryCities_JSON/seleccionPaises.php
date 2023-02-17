@@ -18,10 +18,7 @@ if(!isset($_GET['nombrePais'])&&!isset($_GET['nombreCiudad'])){
     array_push($resultados, $myrow);
   }
 
-  echo '<option value="">Selecciona un país.</option>';
-  foreach($resultados as $pais){
-    echo '<option value="'.$pais['Name'].'">'.$pais['Name'].'</option>';
-  }
+  echo json_encode($resultados);
 
 }else if(isset($_GET['nombrePais'])&&!empty($_GET['nombrePais'])){
   header("access-control-allow-origin: *");
@@ -41,11 +38,8 @@ if(!isset($_GET['nombrePais'])&&!isset($_GET['nombreCiudad'])){
   while ($myrow = $result->fetch_assoc()) {
     array_push($resultados, $myrow);
   }
+  echo json_encode($resultados);
   
-  echo '<option value="">Selecciona una ciudad</option>';
-  foreach($resultados as $ciudad){
-    echo '<option value="'.$ciudad['nombreCiudad'].'">'.$ciudad['nombreCiudad'].'</option>';
-  }
 }else if(isset($_GET['nombreCiudad'])&&!empty($_GET['nombreCiudad'])){
   header("access-control-allow-origin: *");
   $ciudadSeleccionada=$_GET['nombreCiudad'];
@@ -65,9 +59,5 @@ if(!isset($_GET['nombrePais'])&&!isset($_GET['nombreCiudad'])){
   while ($myrow = $result->fetch_assoc()) {
     array_push($resultados, $myrow);
   }
-  foreach($resultados as $ciudad){
-    echo '<h1>'.$ciudad['Name'].'</h1>';
-    echo '<p>Distrito: <strong>'.$ciudad['district'].'</strong></p>';
-    echo '<p>Población: <strong>'.$ciudad['population'].'</strong></p>';
-  }
+  echo json_encode($resultados);
 }
