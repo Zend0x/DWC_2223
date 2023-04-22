@@ -73,8 +73,8 @@ function cargarPaises() {
 
 window.onload = function() {
     let paises=document.getElementById("paises");
-    paises.addEventListener("change",cargarCiudades);
+    paises.addEventListener("click",cargarCiudades);
     let ciudades=document.getElementById("ciudades");
-    ciudades.addEventListener("change",cargarDistritos)
+    ciudades.addEventListener("click",cargarDistritos)
     cargarPaises();
 }

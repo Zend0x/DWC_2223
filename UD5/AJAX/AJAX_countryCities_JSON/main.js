@@ -18,7 +18,6 @@ function cargarPaises() {
 
 function limpiarCiudades(nodoSelect) {
   let elementosOption = nodoSelect.getElementsByTagName("option");
-  console.log(elementosOption);
   for (let i = elementosOption.length; i <= elementosOption.length; i--) {
     nodoSelect.removeChild(elementosOption[i]);
   }
@@ -34,7 +33,6 @@ function cargarCiudades(paisSeleccionado) {
       let select = document.getElementById("ciudades");
       select.innerHTML = "";
       let objetoParseado = JSON.parse(solicitud.responseText);
-      console.log(objetoParseado);
       let nodoSelect = document.getElementById("ciudades");
       for (let i = 0; i < objetoParseado.length; i++) {
         let nuevaOption = document.createElement("option");
@@ -50,7 +48,6 @@ function cargarCiudades(paisSeleccionado) {
 
 function cargarDistritos(ciudadSeleccionada) {
   ciudadSeleccionada = this.value;
-  console.log(ciudadSeleccionada);
   let solicitud = new XMLHttpRequest();
   solicitud.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
@@ -63,16 +60,16 @@ function cargarDistritos(ciudadSeleccionada) {
         let poblacionDistrito = document.createElement("p");
 
         tituloCiudad.innerHTML = objetoParseado[i].Name;
-        nombreDistrito.innerHTML = "Distrito: <b>"+objetoParseado[i].district+"</b>";
-        poblacionDistrito.innerHTML = "Población: <b>"+objetoParseado[i].population+"</b>";
+        nombreDistrito.innerHTML = "Distrito: <b>"+objetoParseado[i].District+"</b>";
+        poblacionDistrito.innerHTML = "Población: <b>"+objetoParseado[i].Population+"</b>";
 
         divDistrito.appendChild(tituloCiudad);
         divDistrito.appendChild(nombreDistrito);
         divDistrito.appendChild(poblacionDistrito);
       }
     }
-  };
-  solicitud.open("GET", "seleccionPaises.php?nombreCiudad=" + ciudadSeleccionada+"&id_ciudad="+objetoParseado[0], true);
+  }
+  solicitud.open("GET", "seleccionPaises.php?id_ciudad="+ciudadSeleccionada, true);
   solicitud.send();
 }
 function limpiarDistrito(distrito) {

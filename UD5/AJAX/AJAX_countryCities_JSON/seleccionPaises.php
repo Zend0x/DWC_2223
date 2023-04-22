@@ -2,7 +2,7 @@
   ini_set('display_errors', 1);
   ini_set('html_errors', 1);
 
-if(!isset($_GET['nombrePais'])&&!isset($_GET['nombreCiudad'])){
+if(!isset($_GET['nombrePais'])&&!isset($_GET['id_ciudad'])){
   header("access-control-allow-origin: *");
   $conexion = mysqli_connect('localhost', 'root', '12345');
   if (mysqli_connect_errno()) {
@@ -28,7 +28,7 @@ if(!isset($_GET['nombrePais'])&&!isset($_GET['nombreCiudad'])){
     echo "Error al conectar a MySQL.";
   }
   mysqli_select_db($conexion, 'world');
-  $consulta = mysqli_prepare($conexion, 'SELECT city.ID, city.Name as "nombreCiudad", city.countryCode, country.Name FROM city 
+  $consulta = mysqli_prepare($conexion, 'SELECT city.ID, city.Name as "nombreCiudad", city.countryCode FROM city 
   INNER JOIN country ON countryCode=country.Code
   WHERE country.Name = "'.$paisSeleccionado.'";');
   $consulta->execute();
@@ -40,19 +40,18 @@ if(!isset($_GET['nombrePais'])&&!isset($_GET['nombreCiudad'])){
   }
   echo json_encode($resultados);
   
-}else if(isset($_GET['nombreCiudad'])&&!empty($_GET['nombreCiudad'])){
+}else if(isset($_GET['id_ciudad'])&&!empty($_GET['id_ciudad'])){
   header("access-control-allow-origin: *");
-  $ciudadSeleccionada=$_GET['nombreCiudad'];
   $id_ciudad=$_GET['id_ciudad'];
   $conexion = mysqli_connect('localhost', 'root', '12345');
   if (mysqli_connect_errno()) {
     echo "Error al conectar a MySQL.";
   }
   mysqli_select_db($conexion, 'world');
-  $consulta = mysqli_prepare($conexion, 'SELECT city.ID, city.Name, city.district, city.population
+  $consulta = mysqli_prepare($conexion, 'SELECT city.ID, city.Name, city.District, city.Population
   FROM city 
   INNER JOIN country ON countryCode=country.Code
-  WHERE city.Name = "'.$ciudadSeleccionada.'" AND WHERE city.ID='.$id_ciudad.';');
+  WHERE city.ID = '.$id_ciudad.';');
   $consulta->execute();
   $result = $consulta->get_result();
 

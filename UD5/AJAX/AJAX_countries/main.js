@@ -13,6 +13,9 @@ function ensenarPaises(letra){
             console.log(jsonDatos[0]);
             let nodoTabla=document.createElement("table");
             nodoTabla.id="tablaPaises";
+            let nodoCaption=document.createElement("caption");
+            nodoCaption.innerHTML="Países"
+            nodoTabla.appendChild(nodoCaption);
             for(let i=0;i<jsonDatos.length;i++){
                 let nodoFila=document.createElement("tr");
                 nodoTabla.appendChild(nodoFila);
